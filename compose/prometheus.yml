@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: 'jaeger-spanmetrics'
+    static_configs:
+      - targets: ['jaeger:8889']
+        labels:
+          source: 'spanmetrics-connector'

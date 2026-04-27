@@ -1,0 +1,17 @@
+id: "01_p99_now"
+predicted_winner: summary
+scoring: programmatic
+tags: [point_query, latency]
+
+prompt: |
+  Using the available MCP tools, look up the current P99 latency for the
+  driver service over the last 60 minutes. Report the value in milliseconds.
+
+ground_truth:
+  type: numeric
+  field: p99_ms
+  service: driver
+  tolerance_pct: 5    # ±5% match against canonical fixture value
+  expected:
+    # Filled in at fixture-snapshot time.
+    placeholder: true

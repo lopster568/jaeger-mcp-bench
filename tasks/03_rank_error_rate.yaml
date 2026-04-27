@@ -1,0 +1,14 @@
+id: "03_rank_error_rate"
+predicted_winner: summary
+scoring: programmatic
+tags: [ranking, error_rate]
+
+prompt: |
+  Among the hotrod services (frontend, customer, driver, route), rank
+  the top 3 by current error rate (highest first). Use the last 30 minutes.
+
+ground_truth:
+  type: ordered_list
+  field: top3_services_by_error_rate
+  expected:
+    placeholder: true

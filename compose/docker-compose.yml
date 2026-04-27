@@ -1,0 +1,68 @@
+version: "3.8"
+
+# Jaeger v2 (with built-in OTel collector + spanmetrics) + hotrod + Prometheus.
+# Configured so spanmetrics flow into Prometheus, then back to Jaeger's metrics API.
+#
+# Bring up: docker-compose up -d
+# Tear down: docker-compose down -v
+#
+# Health check after up: curl http://localhost:16686/api/services should show hotrod services
+# Metrics check: curl 'http://localhost:16686/api/metrics/calls?service=frontend&endTs=...&lookback=300000&step=5000&ratePer=600000'
+
+services:
+  jaeger:
+    image: jaegertracing/jaeger:2.4.0
+    container_name: jaeger
+    ports:
+      - "16686:16686"   # query UI / API
+      - "4317:4317"     # OTLP gRPC
+      - "4318:4318"     # OTLP HTTP
+      - "8888:8888"     # collector telemetry
+    environment:
+      - METRICS_STORAGE_TYPE=prometheus
+      - PROMETHEUS_SERVER_URL=http://prometheus:9090
+      - PROMETHEUS_QUERY_NORMALIZE_CALLS=true
+      - PROMETHEUS_QUERY_NORMALIZE_DURATION=true
+    volumes:
+      - ./jaeger-config.yml:/etc/jaeger/config.yml:ro
+    command: ["--config", "/etc/jaeger/config.yml"]
+    depends_on:
+      - prometheus
+    networks:
+      - bench
+
+  prometheus:
+    image: prom/prometheus:v2.55.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-admin-api"      # required for snapshots
+      - "--storage.tsdb.path=/prometheus"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - bench
+
+  hotrod:
+    image: jaegertracing/example-hotrod:1.71.0
+    container_name: hotrod
+    ports:
+      - "8080:8080"
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_SERVICE_NAME=hotrod
+    depends_on:
+      - jaeger
+    networks:
+      - bench
+
+networks:
+  bench:
+    driver: bridge
+
+volumes:
+  prometheus-data:

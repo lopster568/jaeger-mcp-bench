@@ -1,0 +1,19 @@
+id: "02_spike_detection"
+predicted_winner: series
+scoring: programmatic
+tags: [temporal, anomaly]
+
+prompt: |
+  Did P99 latency for the route service spike in the last hour? If yes,
+  approximately when (within a 5-minute window) and by how much above
+  the baseline (defined as the average of the first half of the window)?
+
+ground_truth:
+  type: structured
+  service: route
+  fields:
+    spike_detected: bool
+    spike_window_start_ms: int_tolerance_60s
+    spike_magnitude_factor: float_tolerance_0.2
+  expected:
+    placeholder: true

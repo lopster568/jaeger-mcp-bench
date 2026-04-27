@@ -1,0 +1,15 @@
+id: "05_threshold"
+predicted_winner: summary
+scoring: programmatic
+tags: [threshold, error_rate]
+
+prompt: |
+  Is the frontend service's current error rate above 5% over the last
+  30 minutes? Answer yes or no.
+
+ground_truth:
+  type: boolean
+  service: frontend
+  field: error_rate_above_5pct
+  expected:
+    placeholder: true

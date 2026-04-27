@@ -1,0 +1,16 @@
+id: "06_trend"
+predicted_winner: series
+scoring: programmatic
+tags: [temporal, trend]
+
+prompt: |
+  Over the last hour, is the customer service error rate trending worse,
+  stable, or improving? Answer with one of: worse | stable | improving.
+
+ground_truth:
+  type: classification
+  service: customer
+  field: trend
+  classes: [worse, stable, improving]
+  expected:
+    placeholder: true

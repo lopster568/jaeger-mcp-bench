@@ -1,0 +1,18 @@
+id: "04_correlation"
+predicted_winner: series
+scoring: programmatic
+tags: [temporal, multi_metric]
+
+prompt: |
+  In the last 30 minutes, did the driver service's error-rate spike
+  correlate temporally with a P99 latency spike? Report yes/no, and if
+  yes, the approximate time offset between the two spikes (in minutes).
+
+ground_truth:
+  type: structured
+  service: driver
+  fields:
+    correlated: bool
+    offset_minutes: int_tolerance_2
+  expected:
+    placeholder: true

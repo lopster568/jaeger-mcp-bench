@@ -1,0 +1,12 @@
+results/runs/
+results/tables/
+*.swp
+.idea/
+.vscode/
+__pycache__/
+*.pyc
+.pytest_cache/
+server/jaeger-mcp-bench-server
+*.snap
+.env
+.env.local

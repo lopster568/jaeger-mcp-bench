@@ -1,0 +1,85 @@
+# Jaeger v2 config: enable OTel collector, spanmetrics connector, Prometheus exporter,
+# and the storage extension wired so /api/metrics/* works.
+#
+# This file is mounted into the jaeger container at /etc/jaeger/config.yml.
+# TODO: validate against jaeger v2.4.0's exact schema before running. See:
+#   https://github.com/jaegertracing/jaeger/blob/main/cmd/jaeger/config-spm.yaml
+
+service:
+  extensions: [jaeger_storage, jaeger_query, healthcheckv2]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [jaeger_storage_exporter, spanmetrics]
+    metrics/spanmetrics:
+      receivers: [spanmetrics]
+      exporters: [prometheus]
+
+extensions:
+  jaeger_storage:
+    backends:
+      memstore:
+        memory:
+          max_traces: 100000
+    metric_backends:
+      prometheus_backend:
+        prometheus:
+          endpoint: http://prometheus:9090
+          normalize_calls: true
+          normalize_duration: true
+  jaeger_query:
+    storage:
+      traces: memstore
+      metrics: prometheus_backend
+    http:
+      endpoint: 0.0.0.0:16686
+    grpc:
+      endpoint: 0.0.0.0:16685
+  healthcheckv2:
+    use_v2: true
+    http:
+      endpoint: 0.0.0.0:13133
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch: {}
+
+connectors:
+  spanmetrics:
+    namespace: traces.span.metrics
+    histogram:
+      explicit:
+        buckets:
+          [
+            2ms,
+            6ms,
+            10ms,
+            100ms,
+            250ms,
+            500ms,
+            1s,
+            2s,
+            5s,
+          ]
+    exemplars:
+      enabled: true
+    dimensions:
+      - name: http.method
+      - name: http.status_code
+    aggregation_temporality: AGGREGATION_TEMPORALITY_CUMULATIVE
+
+exporters:
+  jaeger_storage_exporter:
+    trace_storage: memstore
+  prometheus:
+    endpoint: 0.0.0.0:8889
+    enable_open_metrics: true
+    add_metric_suffixes: true
