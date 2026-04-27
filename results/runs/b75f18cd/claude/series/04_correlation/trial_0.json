@@ -1,0 +1,78 @@
+{
+  "run_id": "b75f18cd",
+  "model": "claude",
+  "format": "series",
+  "task_id": "04_correlation",
+  "trial": 0,
+  "ts_unix": 1777293717,
+  "result": {
+    "answer": "**No.**\n\nThe driver service's error rate was **0** across the entire 30-minute window \u2014 no error-rate spike occurred.\n\nThere *was* a brief P99 latency spike (~296 ms vs. the ~249 ms baseline) at approximately `ts 1777292389\u20131777292419` (two 30-second buckets, ~1 minute duration), but with no corresponding error-rate event there is no correlation to report.",
+    "input_tokens": 8,
+    "output_tokens": 789,
+    "cache_read_tokens": 50351,
+    "cache_creation_tokens": 6307,
+    "tool_calls": 1,
+    "duration_ms": 16993,
+    "raw_output": {
+      "type": "result",
+      "subtype": "success",
+      "is_error": false,
+      "api_error_status": null,
+      "duration_ms": 15132,
+      "duration_api_ms": 15043,
+      "num_turns": 4,
+      "result": "**No.**\n\nThe driver service's error rate was **0** across the entire 30-minute window \u2014 no error-rate spike occurred.\n\nThere *was* a brief P99 latency spike (~296 ms vs. the ~249 ms baseline) at approximately `ts 1777292389\u20131777292419` (two 30-second buckets, ~1 minute duration), but with no corresponding error-rate event there is no correlation to report.",
+      "stop_reason": "end_turn",
+      "session_id": "2f50b1f6-13e4-49f4-8b4a-4c5f4fa00942",
+      "total_cost_usd": 0.05061555,
+      "usage": {
+        "input_tokens": 8,
+        "cache_creation_input_tokens": 6307,
+        "cache_read_input_tokens": 50351,
+        "output_tokens": 789,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 6307,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [
+          {
+            "input_tokens": 3,
+            "output_tokens": 318,
+            "cache_read_input_tokens": 18315,
+            "cache_creation_input_tokens": 2438,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 2438
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-4-6": {
+          "inputTokens": 8,
+          "outputTokens": 789,
+          "cacheReadInputTokens": 50351,
+          "cacheCreationInputTokens": 6307,
+          "webSearchRequests": 0,
+          "costUSD": 0.05061555,
+          "contextWindow": 200000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "uuid": "b5c8cad1-0cd3-402f-a4c4-50434414621b"
+    },
+    "success": true,
+    "error": null
+  }
+}

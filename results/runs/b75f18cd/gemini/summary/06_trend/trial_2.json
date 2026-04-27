@@ -1,0 +1,95 @@
+{
+  "run_id": "b75f18cd",
+  "model": "gemini",
+  "format": "summary",
+  "task_id": "06_trend",
+  "trial": 2,
+  "ts_unix": 1777293057,
+  "result": {
+    "answer": "stable\n",
+    "input_tokens": 68695,
+    "output_tokens": 271,
+    "cache_read_tokens": 36555,
+    "cache_creation_tokens": null,
+    "tool_calls": 6,
+    "duration_ms": 44691,
+    "raw_output": {
+      "response": "stable\n",
+      "stats": {
+        "models": {
+          "gemini-2.5-pro": {
+            "api": {
+              "totalRequests": 7,
+              "totalErrors": 0,
+              "totalLatencyMs": 36963
+            },
+            "tokens": {
+              "prompt": 68695,
+              "candidates": 271,
+              "total": 70500,
+              "cached": 36555,
+              "thoughts": 1534,
+              "tool": 0
+            }
+          }
+        },
+        "tools": {
+          "totalCalls": 6,
+          "totalSuccess": 6,
+          "totalFail": 0,
+          "totalDurationMs": 367,
+          "totalDecisions": {
+            "accept": 0,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 6
+          },
+          "byName": {
+            "get_service_error_rates": {
+              "count": 2,
+              "success": 2,
+              "fail": 0,
+              "durationMs": 121,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 2
+              }
+            },
+            "run_shell_command": {
+              "count": 2,
+              "success": 2,
+              "fail": 0,
+              "durationMs": 188,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 2
+              }
+            },
+            "get_service_call_rates": {
+              "count": 2,
+              "success": 2,
+              "fail": 0,
+              "durationMs": 58,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 2
+              }
+            }
+          }
+        },
+        "files": {
+          "totalLinesAdded": 0,
+          "totalLinesRemoved": 0
+        }
+      }
+    },
+    "success": true,
+    "error": null
+  }
+}

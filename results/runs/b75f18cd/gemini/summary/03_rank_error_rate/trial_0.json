@@ -1,0 +1,71 @@
+{
+  "run_id": "b75f18cd",
+  "model": "gemini",
+  "format": "summary",
+  "task_id": "03_rank_error_rate",
+  "trial": 0,
+  "ts_unix": 1777292849,
+  "result": {
+    "answer": "Based on the last 30 minutes of data, here are the top 3 services by error rate:\n\n1.  **customer**: 0%\n2.  **route**: 0%\n3.  **driver**: 0%\n\nAll services, including `frontend`, have a 0% error rate, so they are all tied for the top spot.",
+    "input_tokens": 28330,
+    "output_tokens": 252,
+    "cache_read_tokens": 16241,
+    "cache_creation_tokens": null,
+    "tool_calls": 8,
+    "duration_ms": 34814,
+    "raw_output": {
+      "response": "Based on the last 30 minutes of data, here are the top 3 services by error rate:\n\n1.  **customer**: 0%\n2.  **route**: 0%\n3.  **driver**: 0%\n\nAll services, including `frontend`, have a 0% error rate, so they are all tied for the top spot.",
+      "stats": {
+        "models": {
+          "gemini-2.5-pro": {
+            "api": {
+              "totalRequests": 3,
+              "totalErrors": 0,
+              "totalLatencyMs": 27433
+            },
+            "tokens": {
+              "prompt": 28330,
+              "candidates": 252,
+              "total": 30410,
+              "cached": 16241,
+              "thoughts": 1828,
+              "tool": 0
+            }
+          }
+        },
+        "tools": {
+          "totalCalls": 8,
+          "totalSuccess": 8,
+          "totalFail": 0,
+          "totalDurationMs": 282,
+          "totalDecisions": {
+            "accept": 0,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 8
+          },
+          "byName": {
+            "get_service_error_rates": {
+              "count": 8,
+              "success": 8,
+              "fail": 0,
+              "durationMs": 282,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 8
+              }
+            }
+          }
+        },
+        "files": {
+          "totalLinesAdded": 0,
+          "totalLinesRemoved": 0
+        }
+      }
+    },
+    "success": true,
+    "error": null
+  }
+}

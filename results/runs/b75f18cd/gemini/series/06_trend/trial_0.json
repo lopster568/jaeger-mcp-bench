@@ -1,0 +1,71 @@
+{
+  "run_id": "b75f18cd",
+  "model": "gemini",
+  "format": "series",
+  "task_id": "06_trend",
+  "trial": 0,
+  "ts_unix": 1777293965,
+  "result": {
+    "answer": "stable",
+    "input_tokens": 34192,
+    "output_tokens": 17,
+    "cache_read_tokens": 8402,
+    "cache_creation_tokens": null,
+    "tool_calls": 1,
+    "duration_ms": 16893,
+    "raw_output": {
+      "response": "stable",
+      "stats": {
+        "models": {
+          "gemini-2.5-pro": {
+            "api": {
+              "totalRequests": 2,
+              "totalErrors": 0,
+              "totalLatencyMs": 9603
+            },
+            "tokens": {
+              "prompt": 34192,
+              "candidates": 17,
+              "total": 34509,
+              "cached": 8402,
+              "thoughts": 300,
+              "tool": 0
+            }
+          }
+        },
+        "tools": {
+          "totalCalls": 1,
+          "totalSuccess": 1,
+          "totalFail": 0,
+          "totalDurationMs": 27,
+          "totalDecisions": {
+            "accept": 0,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 1
+          },
+          "byName": {
+            "get_service_error_rates": {
+              "count": 1,
+              "success": 1,
+              "fail": 0,
+              "durationMs": 27,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 1
+              }
+            }
+          }
+        },
+        "files": {
+          "totalLinesAdded": 0,
+          "totalLinesRemoved": 0
+        }
+      }
+    },
+    "success": true,
+    "error": null
+  }
+}

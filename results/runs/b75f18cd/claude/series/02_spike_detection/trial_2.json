@@ -1,0 +1,78 @@
+{
+  "run_id": "b75f18cd",
+  "model": "claude",
+  "format": "series",
+  "task_id": "02_spike_detection",
+  "trial": 2,
+  "ts_unix": 1777293172,
+  "result": {
+    "answer": "**No meaningful spike.** The route service P99 latency was essentially flat across the entire hour.\n\nHere's the summary:\n\n| Period | P99 Latency Range |\n|---|---|\n| First 30 min (baseline) | 99.099 \u2013 99.132 ms |\n| Last 30 min (recent) | 99.099 \u2013 99.100 ms |\n\n**Baseline average (first half):** ~99.123 ms\n\nThe highest value observed was **99.132 ms**, occurring around **~40 minutes ago** (t-40 min, roughly 20 minutes into the window). That's only **+0.009 ms above baseline** \u2014 well within noise, not an operational spike.\n\nIf anything, the trend is a slight *decrease*: the second half settled at a stable ~99.099\u201399.100 ms, slightly below the first-half average. The total peak-to-trough spread over the full hour is **~0.033 ms**.\n\nNo spike to report.",
+    "input_tokens": 8,
+    "output_tokens": 4059,
+    "cache_read_tokens": 50088,
+    "cache_creation_tokens": 5095,
+    "tool_calls": 1,
+    "duration_ms": 54932,
+    "raw_output": {
+      "type": "result",
+      "subtype": "success",
+      "is_error": false,
+      "api_error_status": null,
+      "duration_ms": 52958,
+      "duration_api_ms": 52846,
+      "num_turns": 3,
+      "result": "**No meaningful spike.** The route service P99 latency was essentially flat across the entire hour.\n\nHere's the summary:\n\n| Period | P99 Latency Range |\n|---|---|\n| First 30 min (baseline) | 99.099 \u2013 99.132 ms |\n| Last 30 min (recent) | 99.099 \u2013 99.100 ms |\n\n**Baseline average (first half):** ~99.123 ms\n\nThe highest value observed was **99.132 ms**, occurring around **~40 minutes ago** (t-40 min, roughly 20 minutes into the window). That's only **+0.009 ms above baseline** \u2014 well within noise, not an operational spike.\n\nIf anything, the trend is a slight *decrease*: the second half settled at a stable ~99.099\u201399.100 ms, slightly below the first-half average. The total peak-to-trough spread over the full hour is **~0.033 ms**.\n\nNo spike to report.",
+      "stop_reason": "end_turn",
+      "session_id": "d5464e02-ea83-4e7e-9723-dbf6e2248380",
+      "total_cost_usd": 0.09504165,
+      "usage": {
+        "input_tokens": 8,
+        "cache_creation_input_tokens": 5095,
+        "cache_read_input_tokens": 50088,
+        "output_tokens": 4059,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 5095,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [
+          {
+            "input_tokens": 3,
+            "output_tokens": 3739,
+            "cache_read_input_tokens": 18054,
+            "cache_creation_input_tokens": 1487,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 1487
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-4-6": {
+          "inputTokens": 8,
+          "outputTokens": 4059,
+          "cacheReadInputTokens": 50088,
+          "cacheCreationInputTokens": 5095,
+          "webSearchRequests": 0,
+          "costUSD": 0.09504165,
+          "contextWindow": 200000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "uuid": "9d453647-425d-4613-840d-17133929b3a8"
+    },
+    "success": true,
+    "error": null
+  }
+}

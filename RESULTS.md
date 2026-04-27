@@ -90,4 +90,4 @@ This matches the data: each format wins on the task-shape it was predicted to wi
 
 ## Reproducing
 
-See [`README.md`](./README.md) "Quickstart". Raw trial dumps under `results/runs/<run_id>/`. Aggregated tables at `results/tables/<run_id>.{csv,md}`. Methodology log at [`docs/research-log.md`](./docs/research-log.md).
+See [`README.md`](./README.md) "Quickstart" for re-running the bench from scratch. The 72 raw trial dumps that produced the numbers above are committed: [`results/runs/b75f18cd/`](./results/runs/b75f18cd/) (with [`manifest.json`](./results/runs/b75f18cd/manifest.json) confirming seed=42 and the randomized cell order). Aggregated tables: [`results/tables/b75f18cd.md`](./results/tables/b75f18cd.md) (per-cell verdicts + tokens + tool calls) and [`results/tables/t6_final.md`](./results/tables/t6_final.md) (Pass^3 cross-model summary). Methodology log: [`docs/research-log.md`](./docs/research-log.md).

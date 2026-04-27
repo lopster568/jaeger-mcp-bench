@@ -1,0 +1,78 @@
+{
+  "run_id": "b75f18cd",
+  "model": "claude",
+  "format": "series",
+  "task_id": "03_rank_error_rate",
+  "trial": 0,
+  "ts_unix": 1777293407,
+  "result": {
+    "answer": "All four services returned **0.0** error rate across every 5-second bucket for the past 30 minutes. There is no ranking to produce \u2014 none of the services recorded any errors in the window.\n\n| Rank | Service  | Avg Error Rate |\n|------|----------|---------------|\n| \u2014    | frontend | 0%            |\n| \u2014    | customer | 0%            |\n| \u2014    | driver   | 0%            |\n| \u2014    | route    | 0%            |\n\nThe hotrod demo is either in a healthy steady state or traffic is not currently being generated. If you expected errors, check that the load generator is running.",
+    "input_tokens": 8,
+    "output_tokens": 731,
+    "cache_read_tokens": 50029,
+    "cache_creation_tokens": 25829,
+    "tool_calls": 2,
+    "duration_ms": 20541,
+    "raw_output": {
+      "type": "result",
+      "subtype": "success",
+      "is_error": false,
+      "api_error_status": null,
+      "duration_ms": 17420,
+      "duration_api_ms": 17326,
+      "num_turns": 6,
+      "result": "All four services returned **0.0** error rate across every 5-second bucket for the past 30 minutes. There is no ranking to produce \u2014 none of the services recorded any errors in the window.\n\n| Rank | Service  | Avg Error Rate |\n|------|----------|---------------|\n| \u2014    | frontend | 0%            |\n| \u2014    | customer | 0%            |\n| \u2014    | driver   | 0%            |\n| \u2014    | route    | 0%            |\n\nThe hotrod demo is either in a healthy steady state or traffic is not currently being generated. If you expected errors, check that the load generator is running.",
+      "stop_reason": "end_turn",
+      "session_id": "40ebc6b1-6dbe-424a-8296-83265efb71dd",
+      "total_cost_usd": 0.12285645,
+      "usage": {
+        "input_tokens": 8,
+        "cache_creation_input_tokens": 25829,
+        "cache_read_input_tokens": 50029,
+        "output_tokens": 731,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 25829,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [
+          {
+            "input_tokens": 3,
+            "output_tokens": 239,
+            "cache_read_input_tokens": 18010,
+            "cache_creation_input_tokens": 22265,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 22265
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-4-6": {
+          "inputTokens": 8,
+          "outputTokens": 731,
+          "cacheReadInputTokens": 50029,
+          "cacheCreationInputTokens": 25829,
+          "webSearchRequests": 0,
+          "costUSD": 0.12285645,
+          "contextWindow": 200000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "uuid": "f909fec6-1f98-42d8-8a69-c73ea472bdbc"
+    },
+    "success": true,
+    "error": null
+  }
+}

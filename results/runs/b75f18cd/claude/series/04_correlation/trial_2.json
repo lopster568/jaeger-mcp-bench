@@ -1,0 +1,78 @@
+{
+  "run_id": "b75f18cd",
+  "model": "claude",
+  "format": "series",
+  "task_id": "04_correlation",
+  "trial": 2,
+  "ts_unix": 1777292955,
+  "result": {
+    "answer": "**No.**\n\nThe driver service had **zero errors** throughout the entire 30-minute window (error rate = 0.0 at every bucket).\n\nThere was a P99 latency spike \u2014 a brief jump from the ~248\u2013249 ms baseline up to ~296 ms around `ts_ms 1777292375375\u20131777292405375` (roughly 9\u201310 minutes ago, lasting ~60 seconds) \u2014 but with no corresponding error-rate spike, there is no temporal correlation to measure.",
+    "input_tokens": 8,
+    "output_tokens": 817,
+    "cache_read_tokens": 50332,
+    "cache_creation_tokens": 5761,
+    "tool_calls": 1,
+    "duration_ms": 20770,
+    "raw_output": {
+      "type": "result",
+      "subtype": "success",
+      "is_error": false,
+      "api_error_status": null,
+      "duration_ms": 18069,
+      "duration_api_ms": 17938,
+      "num_turns": 4,
+      "result": "**No.**\n\nThe driver service had **zero errors** throughout the entire 30-minute window (error rate = 0.0 at every bucket).\n\nThere was a P99 latency spike \u2014 a brief jump from the ~248\u2013249 ms baseline up to ~296 ms around `ts_ms 1777292375375\u20131777292405375` (roughly 9\u201310 minutes ago, lasting ~60 seconds) \u2014 but with no corresponding error-rate spike, there is no temporal correlation to measure.",
+      "stop_reason": "end_turn",
+      "session_id": "d47c8c64-ec9d-425d-a259-79b1b6d39979",
+      "total_cost_usd": 0.04898235,
+      "usage": {
+        "input_tokens": 8,
+        "cache_creation_input_tokens": 5761,
+        "cache_read_input_tokens": 50332,
+        "output_tokens": 817,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 5761,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [
+          {
+            "input_tokens": 3,
+            "output_tokens": 364,
+            "cache_read_input_tokens": 18296,
+            "cache_creation_input_tokens": 1911,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 1911
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-4-6": {
+          "inputTokens": 8,
+          "outputTokens": 817,
+          "cacheReadInputTokens": 50332,
+          "cacheCreationInputTokens": 5761,
+          "webSearchRequests": 0,
+          "costUSD": 0.04898235,
+          "contextWindow": 200000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "uuid": "046e8f27-ba25-42a5-8dfb-957e950a22a8"
+    },
+    "success": true,
+    "error": null
+  }
+}

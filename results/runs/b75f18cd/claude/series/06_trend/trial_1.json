@@ -1,0 +1,78 @@
+{
+  "run_id": "b75f18cd",
+  "model": "claude",
+  "format": "series",
+  "task_id": "06_trend",
+  "trial": 1,
+  "ts_unix": 1777293855,
+  "result": {
+    "answer": "**stable**\n\nAll 13 buckets over the past hour show an error rate of 0.",
+    "input_tokens": 8,
+    "output_tokens": 309,
+    "cache_read_tokens": 49997,
+    "cache_creation_tokens": 3941,
+    "tool_calls": 1,
+    "duration_ms": 10056,
+    "raw_output": {
+      "type": "result",
+      "subtype": "success",
+      "is_error": false,
+      "api_error_status": null,
+      "duration_ms": 8191,
+      "duration_api_ms": 8082,
+      "num_turns": 3,
+      "result": "**stable**\n\nAll 13 buckets over the past hour show an error rate of 0.",
+      "stop_reason": "end_turn",
+      "session_id": "0c3ab799-673f-4c6a-a69c-825fd3dd4bc1",
+      "total_cost_usd": 0.034436850000000005,
+      "usage": {
+        "input_tokens": 8,
+        "cache_creation_input_tokens": 3941,
+        "cache_read_input_tokens": 49997,
+        "output_tokens": 309,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 3941,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [
+          {
+            "input_tokens": 3,
+            "output_tokens": 25,
+            "cache_read_input_tokens": 17984,
+            "cache_creation_input_tokens": 403,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 403
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-4-6": {
+          "inputTokens": 8,
+          "outputTokens": 309,
+          "cacheReadInputTokens": 49997,
+          "cacheCreationInputTokens": 3941,
+          "webSearchRequests": 0,
+          "costUSD": 0.034436850000000005,
+          "contextWindow": 200000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "uuid": "4eb5892f-0683-46a8-be07-8ee598708dc5"
+    },
+    "success": true,
+    "error": null
+  }
+}

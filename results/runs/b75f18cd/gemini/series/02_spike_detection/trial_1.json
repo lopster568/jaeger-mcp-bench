@@ -1,0 +1,71 @@
+{
+  "run_id": "b75f18cd",
+  "model": "gemini",
+  "format": "series",
+  "task_id": "02_spike_detection",
+  "trial": 1,
+  "ts_unix": 1777293824,
+  "result": {
+    "answer": "No, the P99 latency for the route service did not spike in the last hour. The latency remained stable at approximately 99.1 ms.",
+    "input_tokens": 44664,
+    "output_tokens": 53,
+    "cache_read_tokens": 0,
+    "cache_creation_tokens": null,
+    "tool_calls": 1,
+    "duration_ms": 19893,
+    "raw_output": {
+      "response": "No, the P99 latency for the route service did not spike in the last hour. The latency remained stable at approximately 99.1 ms.",
+      "stats": {
+        "models": {
+          "gemini-2.5-pro": {
+            "api": {
+              "totalRequests": 2,
+              "totalErrors": 0,
+              "totalLatencyMs": 14019
+            },
+            "tokens": {
+              "prompt": 44664,
+              "candidates": 53,
+              "total": 45643,
+              "cached": 0,
+              "thoughts": 926,
+              "tool": 0
+            }
+          }
+        },
+        "tools": {
+          "totalCalls": 1,
+          "totalSuccess": 1,
+          "totalFail": 0,
+          "totalDurationMs": 33,
+          "totalDecisions": {
+            "accept": 0,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 1
+          },
+          "byName": {
+            "get_service_latencies": {
+              "count": 1,
+              "success": 1,
+              "fail": 0,
+              "durationMs": 33,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 1
+              }
+            }
+          }
+        },
+        "files": {
+          "totalLinesAdded": 0,
+          "totalLinesRemoved": 0
+        }
+      }
+    },
+    "success": true,
+    "error": null
+  }
+}

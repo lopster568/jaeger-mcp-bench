@@ -1,0 +1,78 @@
+{
+  "run_id": "b75f18cd",
+  "model": "claude",
+  "format": "series",
+  "task_id": "05_threshold",
+  "trial": 2,
+  "ts_unix": 1777294023,
+  "result": {
+    "answer": "No.\n\nThe frontend service's error rate is 0% across all data points in the last 30 minutes \u2014 well below the 5% threshold.",
+    "input_tokens": 8,
+    "output_tokens": 326,
+    "cache_read_tokens": 50002,
+    "cache_creation_tokens": 9158,
+    "tool_calls": 1,
+    "duration_ms": 14312,
+    "raw_output": {
+      "type": "result",
+      "subtype": "success",
+      "is_error": false,
+      "api_error_status": null,
+      "duration_ms": 11066,
+      "duration_api_ms": 10989,
+      "num_turns": 3,
+      "result": "No.\n\nThe frontend service's error rate is 0% across all data points in the last 30 minutes \u2014 well below the 5% threshold.",
+      "stop_reason": "end_turn",
+      "session_id": "9d76077d-81e5-4508-9779-9f875207851b",
+      "total_cost_usd": 0.054257099999999996,
+      "usage": {
+        "input_tokens": 8,
+        "cache_creation_input_tokens": 9158,
+        "cache_read_input_tokens": 50002,
+        "output_tokens": 326,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 9158,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [
+          {
+            "input_tokens": 3,
+            "output_tokens": 36,
+            "cache_read_input_tokens": 17995,
+            "cache_creation_input_tokens": 5609,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 5609
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-4-6": {
+          "inputTokens": 8,
+          "outputTokens": 326,
+          "cacheReadInputTokens": 50002,
+          "cacheCreationInputTokens": 9158,
+          "webSearchRequests": 0,
+          "costUSD": 0.054257099999999996,
+          "contextWindow": 200000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "uuid": "fef55047-c728-4e26-b676-6a894a903924"
+    },
+    "success": true,
+    "error": null
+  }
+}

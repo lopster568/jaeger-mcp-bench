@@ -1,5 +1,10 @@
-results/runs/
-results/tables/
+results/runs/*
+!results/runs/b75f18cd/
+results/tables/*
+!results/tables/b75f18cd.csv
+!results/tables/b75f18cd.md
+!results/tables/t6_final.csv
+!results/tables/t6_final.md
 *.swp
 .idea/
 .vscode/

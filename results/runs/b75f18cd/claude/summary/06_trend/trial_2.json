@@ -1,0 +1,78 @@
+{
+  "run_id": "b75f18cd",
+  "model": "claude",
+  "format": "summary",
+  "task_id": "06_trend",
+  "trial": 2,
+  "ts_unix": 1777294233,
+  "result": {
+    "answer": "**stable**\n\nThe `customer` service is receiving traffic (~0.16 req/s over the last hour), but both the 60-minute and 30-minute error rate windows return no `error_rate` field \u2014 indicating a sustained 0% error rate with no change in trend.",
+    "input_tokens": 18,
+    "output_tokens": 2448,
+    "cache_read_tokens": 127537,
+    "cache_creation_tokens": 6621,
+    "tool_calls": 4,
+    "duration_ms": 62694,
+    "raw_output": {
+      "type": "result",
+      "subtype": "success",
+      "is_error": false,
+      "api_error_status": null,
+      "duration_ms": 60926,
+      "duration_api_ms": 60766,
+      "num_turns": 10,
+      "result": "**stable**\n\nThe `customer` service is receiving traffic (~0.16 req/s over the last hour), but both the 60-minute and 30-minute error rate windows return no `error_rate` field \u2014 indicating a sustained 0% error rate with no change in trend.",
+      "stop_reason": "end_turn",
+      "session_id": "768d1f47-967c-460f-ad44-d20f48b35266",
+      "total_cost_usd": 0.09986385,
+      "usage": {
+        "input_tokens": 18,
+        "cache_creation_input_tokens": 6621,
+        "cache_read_input_tokens": 127537,
+        "output_tokens": 2448,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 6621,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [
+          {
+            "input_tokens": 3,
+            "output_tokens": 189,
+            "cache_read_input_tokens": 20565,
+            "cache_creation_input_tokens": 502,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 502
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-4-6": {
+          "inputTokens": 18,
+          "outputTokens": 2448,
+          "cacheReadInputTokens": 127537,
+          "cacheCreationInputTokens": 6621,
+          "webSearchRequests": 0,
+          "costUSD": 0.09986385,
+          "contextWindow": 200000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "uuid": "a116de67-2a77-44a6-a211-7588a12ccdd8"
+    },
+    "success": true,
+    "error": null
+  }
+}

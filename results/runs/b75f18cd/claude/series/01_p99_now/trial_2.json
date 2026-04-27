@@ -1,0 +1,78 @@
+{
+  "run_id": "b75f18cd",
+  "model": "claude",
+  "format": "series",
+  "task_id": "01_p99_now",
+  "trial": 2,
+  "ts_unix": 1777292710,
+  "result": {
+    "answer": "The P99 latency for the **driver** service over the last 60 minutes:\n\n- **Most recent value: ~249.4 ms**\n- The series was mostly stable in the **248.5 \u2013 249.9 ms** range throughout the window\n- There was a brief spike to **~296.25 ms** roughly 5 minutes ago (around ts 1777292373\u20131777292428), which quickly subsided back to ~249\u2013251 ms",
+    "input_tokens": 8,
+    "output_tokens": 596,
+    "cache_read_tokens": 50090,
+    "cache_creation_tokens": 18592,
+    "tool_calls": 1,
+    "duration_ms": 16480,
+    "raw_output": {
+      "type": "result",
+      "subtype": "success",
+      "is_error": false,
+      "api_error_status": null,
+      "duration_ms": 13020,
+      "duration_api_ms": 12861,
+      "num_turns": 3,
+      "result": "The P99 latency for the **driver** service over the last 60 minutes:\n\n- **Most recent value: ~249.4 ms**\n- The series was mostly stable in the **248.5 \u2013 249.9 ms** range throughout the window\n- There was a brief spike to **~296.25 ms** roughly 5 minutes ago (around ts 1777292373\u20131777292428), which quickly subsided back to ~249\u2013251 ms",
+      "stop_reason": "end_turn",
+      "session_id": "0402496e-a536-4d67-b2a1-9c53b44fc36c",
+      "total_cost_usd": 0.09371099999999999,
+      "usage": {
+        "input_tokens": 8,
+        "cache_creation_input_tokens": 18592,
+        "cache_read_input_tokens": 50090,
+        "output_tokens": 596,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 18592,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [
+          {
+            "input_tokens": 3,
+            "output_tokens": 257,
+            "cache_read_input_tokens": 18072,
+            "cache_creation_input_tokens": 14966,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 14966
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-4-6": {
+          "inputTokens": 8,
+          "outputTokens": 596,
+          "cacheReadInputTokens": 50090,
+          "cacheCreationInputTokens": 18592,
+          "webSearchRequests": 0,
+          "costUSD": 0.09371099999999999,
+          "contextWindow": 200000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "uuid": "20fd92e2-13a3-47a5-99be-7540d545bd7a"
+    },
+    "success": true,
+    "error": null
+  }
+}

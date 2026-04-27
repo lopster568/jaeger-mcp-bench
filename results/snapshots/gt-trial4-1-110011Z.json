@@ -1,0 +1,22 @@
+{
+  "captured_at_unix": 1777287611,
+  "jaeger_url": "http://localhost:16686",
+  "ground_truth": {
+    "01_p99_now": {
+      "value": 447.50000000000045,
+      "unit": "ms",
+      "method": "bucket_max(per_bucket_p99)"
+    },
+    "05_threshold": {
+      "value": false,
+      "actual_rate": 0.0,
+      "threshold": 0.05,
+      "method": "call_weighted_error_rate > 0.05"
+    },
+    "06_trend": {
+      "value": "stable",
+      "slope_per_bucket": 0.0,
+      "method": "linear regression slope; worse>+0.001, improving<-0.001"
+    }
+  }
+}

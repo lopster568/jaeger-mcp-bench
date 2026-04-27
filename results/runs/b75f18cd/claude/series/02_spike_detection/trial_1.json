@@ -1,0 +1,78 @@
+{
+  "run_id": "b75f18cd",
+  "model": "claude",
+  "format": "series",
+  "task_id": "02_spike_detection",
+  "trial": 1,
+  "ts_unix": 1777293370,
+  "result": {
+    "answer": "**No spike detected.** P99 latency for the `route` service was essentially flat throughout the last hour.\n\nHere's a summary of the data (5-minute buckets, oldest \u2192 newest):\n\n| Time (relative) | P99 (ms) |\n|---|---|\n| ~60 min ago | 99.13 |\n| ~55 min ago | 99.13 |\n| ~50 min ago | 99.12 |\n| ~45 min ago | 99.13 |\n| ~40 min ago | 99.11 |\n| ~35 min ago | 99.10 |\n| ~30 min ago | 99.10 |\n| ~25 min ago | 99.10 |\n| ~20 min ago | 99.10 |\n| ~15 min ago | 99.10 |\n| ~10 min ago | 99.10 |\n| ~5 min ago | 99.10 |\n| most recent | 99.10 |\n\n**Baseline (first-half average, buckets 1\u20136):** ~99.12 ms  \n**Second-half average (buckets 7\u201313):** ~99.10 ms\n\nThe P99 actually drifted *down* slightly (~0.02 ms) over the hour \u2014 well within noise. Total range across all 13 buckets is only **0.03 ms**. No spike occurred.",
+    "input_tokens": 8,
+    "output_tokens": 2434,
+    "cache_read_tokens": 49622,
+    "cache_creation_tokens": 4620,
+    "tool_calls": 1,
+    "duration_ms": 37105,
+    "raw_output": {
+      "type": "result",
+      "subtype": "success",
+      "is_error": false,
+      "api_error_status": null,
+      "duration_ms": 33792,
+      "duration_api_ms": 33683,
+      "num_turns": 3,
+      "result": "**No spike detected.** P99 latency for the `route` service was essentially flat throughout the last hour.\n\nHere's a summary of the data (5-minute buckets, oldest \u2192 newest):\n\n| Time (relative) | P99 (ms) |\n|---|---|\n| ~60 min ago | 99.13 |\n| ~55 min ago | 99.13 |\n| ~50 min ago | 99.12 |\n| ~45 min ago | 99.13 |\n| ~40 min ago | 99.11 |\n| ~35 min ago | 99.10 |\n| ~30 min ago | 99.10 |\n| ~25 min ago | 99.10 |\n| ~20 min ago | 99.10 |\n| ~15 min ago | 99.10 |\n| ~10 min ago | 99.10 |\n| ~5 min ago | 99.10 |\n| most recent | 99.10 |\n\n**Baseline (first-half average, buckets 1\u20136):** ~99.12 ms  \n**Second-half average (buckets 7\u201313):** ~99.10 ms\n\nThe P99 actually drifted *down* slightly (~0.02 ms) over the hour \u2014 well within noise. Total range across all 13 buckets is only **0.03 ms**. No spike occurred.",
+      "stop_reason": "end_turn",
+      "session_id": "8f086bdf-9a63-4c0f-9e50-d26729cf6e0f",
+      "total_cost_usd": 0.06874559999999999,
+      "usage": {
+        "input_tokens": 8,
+        "cache_creation_input_tokens": 4620,
+        "cache_read_input_tokens": 49622,
+        "output_tokens": 2434,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 4620,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [
+          {
+            "input_tokens": 3,
+            "output_tokens": 2095,
+            "cache_read_input_tokens": 17588,
+            "cache_creation_input_tokens": 993,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 993
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-4-6": {
+          "inputTokens": 8,
+          "outputTokens": 2434,
+          "cacheReadInputTokens": 49622,
+          "cacheCreationInputTokens": 4620,
+          "webSearchRequests": 0,
+          "costUSD": 0.06874559999999999,
+          "contextWindow": 200000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "uuid": "82f6cabb-f66a-4dfe-918b-ad43d7e03657"
+    },
+    "success": true,
+    "error": null
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "run_id": "b75f18cd",
+  "model": "gemini",
+  "format": "summary",
+  "task_id": "01_p99_now",
+  "trial": 0,
+  "ts_unix": 1777292815,
+  "result": {
+    "answer": "The P99 latency for the driver service over the last 60 minutes is 296.25 ms.",
+    "input_tokens": 17835,
+    "output_tokens": 47,
+    "cache_read_tokens": 8118,
+    "cache_creation_tokens": null,
+    "tool_calls": 1,
+    "duration_ms": 17924,
+    "raw_output": {
+      "response": "The P99 latency for the driver service over the last 60 minutes is 296.25 ms.",
+      "stats": {
+        "models": {
+          "gemini-2.5-pro": {
+            "api": {
+              "totalRequests": 2,
+              "totalErrors": 0,
+              "totalLatencyMs": 10654
+            },
+            "tokens": {
+              "prompt": 17835,
+              "candidates": 47,
+              "total": 18297,
+              "cached": 8118,
+              "thoughts": 415,
+              "tool": 0
+            }
+          }
+        },
+        "tools": {
+          "totalCalls": 1,
+          "totalSuccess": 1,
+          "totalFail": 0,
+          "totalDurationMs": 94,
+          "totalDecisions": {
+            "accept": 0,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 1
+          },
+          "byName": {
+            "get_service_latencies": {
+              "count": 1,
+              "success": 1,
+              "fail": 0,
+              "durationMs": 94,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 1
+              }
+            }
+          }
+        },
+        "files": {
+          "totalLinesAdded": 0,
+          "totalLinesRemoved": 0
+        }
+      }
+    },
+    "success": true,
+    "error": null
+  }
+}

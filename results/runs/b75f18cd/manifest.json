@@ -1,0 +1,457 @@
+{
+  "run_id": "b75f18cd",
+  "started_at_unix": 1777292606,
+  "seed": 42,
+  "shuffled": true,
+  "models": [
+    "claude",
+    "gemini"
+  ],
+  "formats": [
+    "summary",
+    "series"
+  ],
+  "trials_per_cell": 3,
+  "task_ids": [
+    "01_p99_now",
+    "02_spike_detection",
+    "03_rank_error_rate",
+    "04_correlation",
+    "05_threshold",
+    "06_trend"
+  ],
+  "cell_order": [
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "05_threshold",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "01_p99_now",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "05_threshold",
+      "trial": 0
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "04_correlation",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "03_rank_error_rate",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "01_p99_now",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "06_trend",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "06_trend",
+      "trial": 0
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "06_trend",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "02_spike_detection",
+      "trial": 1
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "01_p99_now",
+      "trial": 0
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "03_rank_error_rate",
+      "trial": 0
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "03_rank_error_rate",
+      "trial": 1
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "05_threshold",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "06_trend",
+      "trial": 1
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "02_spike_detection",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "04_correlation",
+      "trial": 2
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "01_p99_now",
+      "trial": 2
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "05_threshold",
+      "trial": 2
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "03_rank_error_rate",
+      "trial": 2
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "06_trend",
+      "trial": 2
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "06_trend",
+      "trial": 1
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "02_spike_detection",
+      "trial": 0
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "04_correlation",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "02_spike_detection",
+      "trial": 2
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "01_p99_now",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "03_rank_error_rate",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "03_rank_error_rate",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "01_p99_now",
+      "trial": 1
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "04_correlation",
+      "trial": 1
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "06_trend",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "02_spike_detection",
+      "trial": 1
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "04_correlation",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "03_rank_error_rate",
+      "trial": 0
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "03_rank_error_rate",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "03_rank_error_rate",
+      "trial": 0
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "02_spike_detection",
+      "trial": 1
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "02_spike_detection",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "04_correlation",
+      "trial": 0
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "05_threshold",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "02_spike_detection",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "04_correlation",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "04_correlation",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "01_p99_now",
+      "trial": 0
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "05_threshold",
+      "trial": 0
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "01_p99_now",
+      "trial": 1
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "05_threshold",
+      "trial": 1
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "02_spike_detection",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "03_rank_error_rate",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "06_trend",
+      "trial": 1
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "03_rank_error_rate",
+      "trial": 2
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "02_spike_detection",
+      "trial": 2
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "04_correlation",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "05_threshold",
+      "trial": 0
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "06_trend",
+      "trial": 0
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "03_rank_error_rate",
+      "trial": 1
+    },
+    {
+      "model": "gemini",
+      "format": "summary",
+      "task_id": "01_p99_now",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "05_threshold",
+      "trial": 2
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "06_trend",
+      "trial": 2
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "04_correlation",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "02_spike_detection",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "01_p99_now",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "01_p99_now",
+      "trial": 2
+    },
+    {
+      "model": "gemini",
+      "format": "series",
+      "task_id": "01_p99_now",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "04_correlation",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "05_threshold",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "06_trend",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "04_correlation",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "05_threshold",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "series",
+      "task_id": "06_trend",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "02_spike_detection",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "summary",
+      "task_id": "05_threshold",
+      "trial": 2
+    }
+  ]
+}

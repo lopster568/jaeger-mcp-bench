@@ -1,0 +1,83 @@
+{
+  "run_id": "b75f18cd",
+  "model": "gemini",
+  "format": "series",
+  "task_id": "04_correlation",
+  "trial": 0,
+  "ts_unix": 1777293387,
+  "result": {
+    "answer": "No.\n",
+    "input_tokens": 35541,
+    "output_tokens": 59,
+    "cache_read_tokens": 0,
+    "cache_creation_tokens": null,
+    "tool_calls": 2,
+    "duration_ms": 16902,
+    "raw_output": {
+      "response": "No.\n",
+      "stats": {
+        "models": {
+          "gemini-2.5-pro": {
+            "api": {
+              "totalRequests": 2,
+              "totalErrors": 0,
+              "totalLatencyMs": 9538
+            },
+            "tokens": {
+              "prompt": 35541,
+              "candidates": 59,
+              "total": 35941,
+              "cached": 0,
+              "thoughts": 341,
+              "tool": 0
+            }
+          }
+        },
+        "tools": {
+          "totalCalls": 2,
+          "totalSuccess": 2,
+          "totalFail": 0,
+          "totalDurationMs": 37,
+          "totalDecisions": {
+            "accept": 0,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 2
+          },
+          "byName": {
+            "get_service_error_rates": {
+              "count": 1,
+              "success": 1,
+              "fail": 0,
+              "durationMs": 21,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 1
+              }
+            },
+            "get_service_latencies": {
+              "count": 1,
+              "success": 1,
+              "fail": 0,
+              "durationMs": 16,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 1
+              }
+            }
+          }
+        },
+        "files": {
+          "totalLinesAdded": 0,
+          "totalLinesRemoved": 0
+        }
+      }
+    },
+    "success": true,
+    "error": null
+  }
+}

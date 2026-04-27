@@ -1,0 +1,78 @@
+{
+  "run_id": "b75f18cd",
+  "model": "claude",
+  "format": "summary",
+  "task_id": "05_threshold",
+  "trial": 0,
+  "ts_unix": 1777293949,
+  "result": {
+    "answer": "No. The query returned no error rate value for the frontend service over the last 30 minutes (the result row contains no `error_rate` field), indicating the error rate is effectively 0% \u2014 well below the 5% threshold.",
+    "input_tokens": 8,
+    "output_tokens": 664,
+    "cache_read_tokens": 35548,
+    "cache_creation_tokens": 18183,
+    "tool_calls": 1,
+    "duration_ms": 18076,
+    "raw_output": {
+      "type": "result",
+      "subtype": "success",
+      "is_error": false,
+      "api_error_status": null,
+      "duration_ms": 15748,
+      "duration_api_ms": 15633,
+      "num_turns": 3,
+      "result": "No. The query returned no error rate value for the frontend service over the last 30 minutes (the result row contains no `error_rate` field), indicating the error rate is effectively 0% \u2014 well below the 5% threshold.",
+      "stop_reason": "end_turn",
+      "session_id": "1e6dc930-7980-44e1-8b7b-114ffdfface5",
+      "total_cost_usd": 0.08883465,
+      "usage": {
+        "input_tokens": 8,
+        "cache_creation_input_tokens": 18183,
+        "cache_read_input_tokens": 35548,
+        "output_tokens": 664,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 18183,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [
+          {
+            "input_tokens": 3,
+            "output_tokens": 386,
+            "cache_read_input_tokens": 17987,
+            "cache_creation_input_tokens": 196,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 196
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-4-6": {
+          "inputTokens": 8,
+          "outputTokens": 664,
+          "cacheReadInputTokens": 35548,
+          "cacheCreationInputTokens": 18183,
+          "webSearchRequests": 0,
+          "costUSD": 0.08883465,
+          "contextWindow": 200000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "uuid": "ca6bda6b-e4d9-411a-9a86-9a5e04fc5c1e"
+    },
+    "success": true,
+    "error": null
+  }
+}

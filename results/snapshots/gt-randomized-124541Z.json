@@ -1,0 +1,55 @@
+{
+  "captured_at_unix": 1777293942,
+  "jaeger_url": "http://localhost:16686",
+  "ground_truth": {
+    "01_p99_now": {
+      "value": 296.2500000000024,
+      "unit": "ms",
+      "method": "bucket_max(per_bucket_p99)"
+    },
+    "02_spike_detection": {
+      "value": {
+        "spike_detected": false,
+        "spike_window_start_ms": null,
+        "spike_magnitude_factor": null
+      },
+      "method": "max(second_half) / mean(first_half), threshold=2x"
+    },
+    "03_rank_error_rate": {
+      "value": [
+        "frontend",
+        "customer",
+        "driver"
+      ],
+      "rates_full": {
+        "frontend": 0.0,
+        "customer": 0.0,
+        "driver": 0.0,
+        "route": 0.0
+      },
+      "method": "call_weighted_error_rate per service, sort desc, take top 3"
+    },
+    "04_correlation": {
+      "value": {
+        "correlated": false,
+        "offset_minutes": null
+      },
+      "details": {
+        "err_spike": false,
+        "lat_spike": false
+      },
+      "method": "spike-detection on each, offset = bucket index delta * step"
+    },
+    "05_threshold": {
+      "value": false,
+      "actual_rate": 0.0,
+      "threshold": 0.05,
+      "method": "call_weighted_error_rate > 0.05"
+    },
+    "06_trend": {
+      "value": "stable",
+      "slope_per_bucket": 0.0,
+      "method": "linear regression slope; worse>+0.001, improving<-0.001"
+    }
+  }
+}
