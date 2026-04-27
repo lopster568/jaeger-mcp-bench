@@ -59,7 +59,7 @@ Series uses 0.74-4.78× the format-specific input tokens summary uses, varying b
 1. **Calibrated declines dominate over wrong commitments.** 71 of 72 trials are either correct or a calibrated decline. Summary's effect on temporal questions is to make agents decline, not to make them answer wrong.
 2. **On point-query / threshold tasks, summary matches series on correctness and uses fewer tokens.** The reduction is 1.1-4.8× format-specific tokens, varying by task and model.
 3. **On temporal tasks, series uniquely solves what summary cannot.** On Task 02 (spike detection), every summary trial across both models either declined or noted explicitly that aggregation had discarded the time axis.
-4. **Each format wins on the task-shape it was predicted to win on.** Forcing one shape forfeits the other half.
+4. **Per-task split.** On point queries (tasks 01, 03, 05) summary and series produced the same correctness; on temporal tasks (02, 04, 06) only series produced correct answers.
 
 ## A bench-server bug downward-biases summary on tasks 03 and 06
 
@@ -71,22 +71,12 @@ Both models retried `get_service_error_rates` 4-5× on Task 03 in summary mode (
 
 The benchmark prototype runs without this fix on purpose: the format A/B should reflect what a first-cut Jaeger PR would actually look like. Fix and four other in-server findings are catalogued in [`docs/potential-prs.md`](./docs/potential-prs.md) (PR-1 covers this bug).
 
-## Recommendation
-
-Expose both formats through a single MCP tool with a `format` parameter:
-
-- Default `format=summary` for the common "what's the current p99?" / "is this above threshold?" call sites.
-- Opt-in `format=series` for temporal questions where the time axis matters.
-- Document the trade-off in the tool description so the agent picks correctly.
-
-This matches the data: each format wins on the task-shape it was predicted to win on, and forcing a single shape forfeits the other half.
-
 ## Caveats
 
 - Steady-state fixture only. No injected spike or error fault. The benchmark measures *which format the agent can extract a temporal answer from*, not *which format detects a real spike best*.
 - 6 tasks, n=18 per arm. Cross-model deltas are not significant at this sample size.
 - LLM stochasticity is the irreducible noise; trial count amortizes over it.
-- Scoring rules were tightened mid-analysis to accommodate bare-No/Yes answers and to expand non-answer detection. Trial 6 numbers above use the final scorer.
+- Scoring rules were tightened mid-analysis to accommodate bare-No/Yes answers and to expand non-answer detection. Numbers above use the final scorer; the committed `results/tables/b75f18cd.md` is regenerated from the same scorer.
 
 ## Reproducing
 

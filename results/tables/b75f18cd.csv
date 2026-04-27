@@ -21,11 +21,11 @@ claude,series,06_trend,3,3,0,0,1.0,1,8,318.7,3945.3,49996.7,1,11245,"**stable**
 
 All 13 buckets over the past hour show an error rate of 0.",
 claude,summary,01_p99_now,3,3,0,0,1.0,1,8,358,3882,50085.7,1,12332,The P99 latency for the **driver** service over the last 60 minutes is **296.25 ms**.,
-claude,summary,02_spike_detection,3,0,2,1,0.0,0,8,848,2871,51166.3,1,21248,,"agent=True expected=False :: The tool returns a single aggregate row for the entire window — there's no per-bucket time series in the response:
+claude,summary,02_spike_detection,3,0,0,3,0.0,0,8,848,2871,51166.3,1,21248,,"agent declined to answer :: The tool returns a single aggregate row for the entire window — there's no per-bucket time series in the response:
 
 | Se"
 claude,summary,03_rank_error_rate,3,2,1,0,0.667,1,10.7,1812.7,5688,75744,4.67,34327,"The responses came back but none of the rows include an error rate value — every service returned only `service`, `window_sec`, and `step_sec` with no `error_rate` field. This indicates **zero errors ","got=['driver', 'route'] (ties: any 3 of 4 accepted) :: The Jaeger metrics API is returning rows for all four services but **no `error_rate` field in any response** — the rows "
-claude,summary,04_correlation,3,2,0,1,0.667,1,8,834,3287.3,51400.3,1,20884,"**No** — and the data does not support a temporal correlation analysis.
+claude,summary,04_correlation,3,1,0,2,0.333,1,8,834,3287.3,51400.3,1,20884,"**No** — and the data does not support a temporal correlation analysis.
 
 Both tools returned a single aggregated row for the 30-minute window rather than a time series of per-bucket values:
 
@@ -37,12 +37,18 @@ The `customer` service is receiving traffic (~0.16 req/s over the last hour), bu
 gemini,series,01_p99_now,3,3,0,0,1.0,1,48125.3,45.7,0,11041.3,1,21471,The P99 latency for the driver service over the last 60 minutes is 249.66 ms.,
 gemini,series,02_spike_detection,3,3,0,0,1.0,1,44678,55.3,0,8263.7,1,21304,"No, the P99 latency for the route service did not spike in the last hour. The latency remained stable at approximately 99.1 ms.",
 gemini,series,03_rank_error_rate,3,3,0,0,1.0,1,51090.7,160,0,9818.3,4,24014,"I looked at the error rates for the `frontend`, `customer`, `driver`, and `route` services over the last 30 minutes, but all of them have an error rate of 0. Therefore, I can't provide a ranking.",
-gemini,series,04_correlation,3,2,0,1,0.667,1,29441.7,77.3,0,5491.3,2,19111,No.,no clear yes/no on correlation :: I was unable to retrieve the metrics for the 'driver' service. The monitoring service returned an error. Please ensure t
+gemini,series,04_correlation,3,2,0,1,0.667,1,29441.7,77.3,0,5491.3,2,19111,No.,agent declined to answer :: I was unable to retrieve the metrics for the 'driver' service. The monitoring service returned an error. Please ensure t
 gemini,series,05_threshold,3,3,0,0,1.0,1,25986,25,0,8325.3,1,17229,No.,
 gemini,series,06_trend,3,3,0,0,1.0,1,34335.3,16.3,0,8400.7,1,18445,stable,
 gemini,summary,01_p99_now,3,3,0,0,1.0,1,17759,45.3,0,5412,1,17270,The P99 latency for the driver service is 296.25 ms.,
 gemini,summary,02_spike_detection,3,0,0,3,0.0,0,20916.7,107.7,0,9472,1.33,22356,,"agent declined to answer :: Based on the aggregated data for the last hour, the P99 latency for the `route` service's `/route` operation was 99.13 m"
-gemini,summary,03_rank_error_rate,3,2,0,1,0.667,1,21363.3,179.3,0,8123.3,5.33,24039,"I was unable to retrieve error rates for the frontend, customer, driver, and route services in the last 30 minutes. This could mean there are no errors to report.",no service names in answer :: I am unable to rank the services by error rate as no error rate data was reported for any of the hotrod services in the 
+gemini,summary,03_rank_error_rate,3,1,0,2,0.333,1,21363.3,179.3,0,8123.3,5.33,24039,"Based on the last 30 minutes of data, here are the top 3 services by error rate:
+
+1.  **customer**: 0%
+2.  **route**: 0%
+3.  **driver**: 0%
+
+All services, including `frontend`, have a 0% error rate, s",no service names in answer :: I am unable to rank the services by error rate as no error rate data was reported for any of the hotrod services in the 
 gemini,summary,04_correlation,3,2,0,1,0.667,1,24707,162.3,0,13538.3,3,23924,No.,agent declined to answer :: I am still unable to answer your question. I tried querying another service (`customer`) to see if the issue was specifi
 gemini,summary,05_threshold,3,3,0,0,1.0,1,17697.7,25,0,5411,1,18662,No.,
 gemini,summary,06_trend,3,2,0,1,0.667,1,48609,185,0,25723.7,4.33,39335,stable,"no clear trend classification :: I've been unable to find the correct service name. I've tried ""customer"", ""frontend"", ""backend"", and ""service"" without s"
