@@ -24,10 +24,10 @@ The maintainer's framing was "a real agent troubleshooting some issues and using
 
 ```
 compose/        Docker stack: Jaeger + hotrod + Prometheus
-fixture/        Traffic generator + ground-truth snapshot scripts
+fixture/        Traffic generator + Prometheus TSDB snapshot script
 server/         Go MCP server (proxies Jaeger /api/metrics/*, format-switchable)
 tasks/          YAML task definitions + ground-truth evaluators
-harness/        Python orchestrator that drives the CLIs + scores trajectories
+harness/        Python orchestrator that drives the CLIs, resolves ground truth, and scores answers
 docs/           Methodology log + potential upstream PRs catalog
 results/        Committed: the published run's raw trial dumps + aggregated tables (`runs/b75f18cd/`, `tables/b75f18cd.*`, `tables/t6_final.*`)
                 Re-runs land in `runs/<new_id>/` and `tables/<new_id>.*` (gitignored by default)
@@ -49,16 +49,20 @@ RESULTS.md      Headline numbers, statistical tests, bug-disclosure
 # 1. Stand up the fixture
 cd compose && docker-compose up -d
 cd ../fixture && ./load.sh        # 5-10 minutes of traffic
-./snapshot.sh                     # capture ground-truth values from /api/metrics
+./snapshot.sh                     # optional: freeze the Prometheus TSDB for archival
 
 # 2. Build the format-switchable MCP server
 cd ../server && go build -o jaeger-mcp-bench-server ./...
 
-# 3. Run the benchmark (writes to results/runs/<new_run_id>/)
-cd ../harness && python orchestrator.py --models claude,gemini --formats summary,series --trials 3
+# 3. Capture ground truth (queries /api/metrics with the same params and
+#    reductions the agent's tool uses; run while the fixture is steady)
+cd ../harness && python ground_truth_resolver.py --output ../results/snapshots/gt-<timestamp>.json
 
-# 4. Aggregate (writes results/tables/<run_id>.{csv,md})
-python aggregate_v2.py --run-id <new_run_id> --ground-truth ../results/snapshots/<gt-snapshot>.json
+# 4. Run the benchmark (writes to results/runs/<new_run_id>/)
+python orchestrator.py --models claude,gemini --formats summary,series --trials 3
+
+# 5. Aggregate (writes results/tables/<run_id>.{csv,md})
+python aggregate_v2.py --run-id <new_run_id> --ground-truth ../results/snapshots/gt-<timestamp>.json
 ```
 
 ## Raw trial data
@@ -75,6 +79,16 @@ The 72 trial dumps behind [`RESULTS.md`](./RESULTS.md) are at [`results/runs/b75
 ## Reproducibility
 
 The published run uses `seed=42`; the 72 raw trial JSONs, per-trial ground-truth snapshots from `/api/metrics`, and the manifest are all committed. A fresh run of the bench will produce similar (not numerically identical) metric values and similar (not numerically identical) LLM responses; expect summary-vs-series correctness gaps in the same direction and rough magnitude as run `b75f18cd`.
+
+## Known limitations
+
+- **Outcome-only scoring.** Trial dumps record the final answer plus aggregate usage. Claude's `--output-format json` emits no per-step tool-call sequence, so step-level trajectory metrics (steps to evidence, per-call error rate) are not computable from the stored data; Gemini dumps carry only unordered per-tool totals. Full trajectory capture would need `--output-format stream-json` (Claude) and the Gemini equivalent.
+- **No fault injection.** All six tasks are questions over a steady-state hotrod fixture. `fixture/load.sh` reserves scenario names for it, but error injection is not implemented.
+- **Regex answer scoring.** Per-task extraction regexes are brittle, and Task 01's numeric tolerance is wide enough that it rarely discriminates.
+- **Known server bug preserved by design.** `SummaryRow`'s `float64` + `omitempty` drops legitimate zero values (see [`RESULTS.md`](./RESULTS.md) and `docs/potential-prs.md` PR-1); the published run measures the as-built prototype with this bug intact, and its bias direction is analyzed in the results.
+- **Bonferroni correction is prose-only.** Raw p-values are compared against 0.05/4 in `RESULTS.md`; no code computes the correction.
+
+These are the natural extension paths for a broader evaluation harness: full trajectory capture, deterministic fault scenarios with known ground-truth root causes, and structured answer contracts instead of regex extraction.
 
 ## Status
 

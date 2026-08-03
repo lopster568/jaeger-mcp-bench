@@ -1,7 +1,7 @@
 """Orchestrator: run the (model × format × task × trial) matrix and dump per-trial JSON.
 
 Each trial dump goes to results/runs/<run_id>/<model>/<format>/<task_id>/trial_<n>.json.
-Aggregation lives in aggregate.py; this script is just the runner.
+Aggregation lives in aggregate_v2.py; this script is just the runner.
 
 Bug fix: previous version iterated nested model→format→task→trial, which
 created a temporal confound - all summary trials run on a temporally-earlier
