@@ -141,6 +141,5 @@ upstream-API issue. Each entry should include:
 - Severity assessment
 - PR scope estimate
 
-When ready to upstream, cherry-pick the strongest 1-2 items into a PR. Don't
-bundle all five - see `feedback_yurishkuro_architecture.md`: yuri prefers
-focused PRs, not "I found 5 things while doing X."
+When ready to upstream, cherry-pick the strongest 1-2 items into a focused
+PR. Don't bundle all five - one PR per issue keeps review tractable.

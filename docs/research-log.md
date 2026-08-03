@@ -353,8 +353,8 @@ In tasks 03 and 06, the agent observed JSON rows missing the `error_rate` field 
 3. Run 3 trials per cell on Claude.
 4. Add Gemini arm: 3 trials per cell × 12 cells = 36 trials.
 5. Wire `aggregate.py` end-to-end; produce `results/tables/<run_id>.csv` and `.md`.
-6. Draft post in `analysis/post_template.md` with results.
-7. Run draft through fact + critique agents (per `feedback_critique_agent_pattern.md`).
+6. Draft post with results (local working file, not committed to this repo).
+7. Run draft through independent fact-check + critique review passes.
 8. Post on #8409.
 
 ---
@@ -779,7 +779,7 @@ against summary.
 
 ### Action taken
 
-Post draft v3 created (`analysis/post_draft_v3.md`) with:
+Post draft v3 created (local working file, not committed to this repo) with:
 - Three-column reporting (correct / wrong / non_answer)
 - Statistical significance caveat
 - Scorer-modification disclosure
@@ -841,10 +841,10 @@ instruction to find what the §14.5 reviewer missed. Findings (paraphrased):
    deferred to v2 of the benchmark.
 8. /tmp config files leak (89 stale files at review time). Smell, not bug.
    Deferred.
-9. `claude_runner.py:tool_calls` uses `(num_turns - 1) // 2` heuristic; a
-   `_count_tool_calls` walker exists but is never called from `run()`.
-   Heuristic is good-enough for current data but should switch to walker.
-   Deferred.
+9. `claude_runner.py:tool_calls` uses `(num_turns - 1) // 2` heuristic; an
+   exact count would need `--output-format stream-json` event parsing, and
+   the committed runner has no exact counter. Heuristic is good-enough for
+   current data. Deferred.
 10. Trial JSONs don't contain agent's tool-use trajectory for Claude
     (Claude `--output-format json` emits aggregate usage only). Auditing
     individual tool calls requires `--output-format stream-json`. Deferred.
@@ -854,7 +854,9 @@ instruction to find what the §14.5 reviewer missed. Findings (paraphrased):
 12. `_score_03_rank_error_rate` accepts truncated answers when the rank
     isn't all-tied. Cosmetic; current data has all-tied case so unaffected.
 13. Reproducibility audit: from repo + prompt, would-be reproducer is stuck
-    on undocumented setup steps. Documented as caveat in REVIEW_PACKET.
+    on undocumented setup steps. Documented in local review notes (not
+    committed); the README quickstart has since been corrected to include
+    the ground-truth capture step.
 
 ### Fixes applied in code
 
@@ -884,6 +886,12 @@ Verdict counts on Trials 4 + 5 (run-ids `72beec4d` and `45cfdf5d`) are
 The regex bugs were latent - none of our actual trial answers triggered the
 buggy paths. This is reassurance that the §13/§14 findings still stand on
 the existing data, but it doesn't address the matrix-order temporal confound.
+
+Note: the table above covers the non-randomized Trials 4+5. The canonical
+published numbers come from the randomized run `b75f18cd` (§14.7) and are
+reported in `RESULTS.md`; the two differ (e.g. claude/summary 14/18 here vs
+10/18 in the randomized run), which is expected given the temporal confound
+the randomization was added to remove.
 
 ## §14.7 - Trial 6: randomized matrix on fixed scorer (2026-04-27 12:23 UTC, in progress)
 
