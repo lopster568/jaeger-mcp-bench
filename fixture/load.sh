@@ -2,9 +2,10 @@
 # Drive hotrod through its UI endpoints to generate spans + metrics.
 # Three scenarios, selected by SCENARIO env var (default: degraded).
 #
-#   steady    - uniform 100 req/min, 0% injected errors
-#   degraded  - uniform 100 req/min, 5-10% errors at driver service
-#   spike     - ramp 100 → 300 req/min at T=5min, 8% errors T=8-10min
+#   steady    - uniform 100 req/min
+#   degraded  - currently identical to steady; error injection is a TODO
+#               (hotrod's built-in latency/error behavior still applies)
+#   spike     - ramp 100 -> 300 req/min at T=5min; error injection is a TODO
 #
 # Default duration: 10 minutes. Override with DURATION_SEC env var.
 
@@ -34,7 +35,7 @@ errors=0
 echo "[load] scenario=${SCENARIO} duration=${DURATION_SEC}s target=${HOTROD_URL}"
 
 while [[ $(date +%s) -lt ${end_at} ]]; do
-  # Rate logic per scenario (TODO: implement spike ramp + error injection)
+  # Rate logic per scenario (TODO: implement error injection)
   case "${SCENARIO}" in
     spike)
       now=$(date +%s)
