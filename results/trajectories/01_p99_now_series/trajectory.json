@@ -1,0 +1,56 @@
+{
+  "steps": [
+    {
+      "index": 0,
+      "tool": "ToolSearch",
+      "input_json": "{\"max_results\": 5, \"query\": \"select:mcp__jaeger-bench__get_service_latencies\"}",
+      "input_bytes": 78,
+      "result_bytes": 83,
+      "is_error": false
+    },
+    {
+      "index": 1,
+      "tool": "mcp__jaeger-bench__get_service_latencies",
+      "input_json": "{\"quantile\": 0.99, \"service\": \"driver\", \"window_minutes\": 60}",
+      "input_bytes": 61,
+      "result_bytes": 2445,
+      "is_error": false
+    }
+  ],
+  "tool_calls": 2,
+  "error_calls": 0,
+  "result_bytes_total": 2528,
+  "final_answer": "The current P99 latency for the **driver** service (last 60 minutes) is **~249.4 ms** (most recent data point: 249.39 ms).\n\nOver the window it ranged from about 248.5 ms to 249.9 ms, trending slightly upward.",
+  "num_turns": 3,
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 34169,
+    "cache_read_input_tokens": 64569,
+    "output_tokens": 649,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 34169,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 85,
+        "cache_read_input_tokens": 32726,
+        "cache_creation_input_tokens": 1443,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1443
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "duration_ms": 14476
+}

@@ -9,20 +9,28 @@ input, result bytes entering context, error flag - plus the final answer and
 usage. This is the input that trajectory metrics (steps to evidence,
 per-call error rate, context bloat) need.
 
-## Validated sample
+## Captured fixture sample (real MCP tools)
 
-Self-test against a live CLI run (claude 2.1.220, no MCP server, one Bash
-call), from `trajectory_capture.py capture`:
+One live trial against the compose fixture (claude 2.1.220, Task 01 prompt,
+`series` format), committed at `results/trajectories/01_p99_now_series/`:
 
 | # | tool | input | result bytes | error |
 |---|------|-------|--------------|-------|
-| 0 | `Bash` | `{"command": "echo trajectory-test-42", "description": "Echo test string"}` | 18 | False |
+| 0 | `ToolSearch` | `{"max_results": 5, "query": "select:mcp__jaeger-bench__get_service_latencies"}` | 83 | False |
+| 1 | `mcp__jaeger-bench__get_service_latencies` | `{"quantile": 0.99, "service": "driver", "window_minutes": 60}` | 2445 | False |
 
-- exact tool calls: **1** (errored: 0)
-- `num_turns` reported: 2, so the published run's heuristic
-  `max(0, (num_turns - 1) // 2)` would have estimated **0** tool calls for
-  this trial. The event stream gives the true count and ordering; the
-  heuristic cannot.
+- exact tool calls: **2** (errored: 0); tool-result bytes entering context: **2528**
+- Final answer: "~249.4 ms (most recent data point: 249.39 ms) ... ranged
+  from about 248.5 ms to 249.9 ms". Checked against `/api/metrics/latencies`
+  directly at capture time: last point 249.389, min 248.5, max 249.86 - the
+  answer matches the API to the decimal.
+- Step 0 is the CLI loading the MCP tool schema on demand - itself a
+  discovery cost the aggregate-only output format never showed.
+- `num_turns` reported: 3, so the published run's heuristic
+  `max(0, (num_turns - 1) // 2)` estimates **1** tool call where the event
+  stream shows the true **2**. (An earlier no-MCP self-test showed the same
+  undercount: heuristic 0, actual 1.) The event stream gives the true count
+  and ordering; the heuristic cannot.
 
 ## Running against the fixture
 
@@ -36,7 +44,10 @@ python trajectory_capture.py capture \
 ```
 
 Outputs under `--out`: `events.jsonl` (raw stream), `trajectory.json`,
-`trajectory.md`. Re-parse without spending tokens:
+`trajectory.md`. The committed sample's `events.jsonl` keeps every
+assistant/user/result event (the full trajectory) but drops `system/*`
+events, which carry local CLI environment configuration rather than
+trajectory data. Re-parse without spending tokens:
 
 ```bash
 python trajectory_capture.py parse ../results/trajectories/<name>/events.jsonl
