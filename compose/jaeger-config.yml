@@ -1,9 +1,16 @@
 # Jaeger v2 config: enable OTel collector, spanmetrics connector, Prometheus exporter,
-# and the storage extension wired so /api/metrics/* works.
+# and the storage extension wired so /api/metrics/* works. Also enables the
+# built-in MCP server (ai.enable_mcp) for arm 2's "tiered" arm - see
+# docs/arm2-design.md.
 #
 # This file is mounted into the jaeger container at /etc/jaeger/config.yml.
-# TODO: validate against jaeger v2.4.0's exact schema before running. See:
-#   https://github.com/jaegertracing/jaeger/blob/main/cmd/jaeger/config-spm.yaml
+#
+# Validated against jaeger v2.20.0 (bumped from 2.4.0 for arm 2) by diffing
+# every key here against the released cmd/jaeger/config.yaml and
+# cmd/jaeger/internal/all-in-one.yaml samples, and the vendored
+# spanmetricsconnector v0.155.0 / prometheusexporter v0.155.0 config structs
+# (jumped from v0.121.0 at 2.4.0). No key in this file changed name or shape
+# between 2.4.0 and 2.20.0; the only addition is the `ai:` block below.
 
 service:
   extensions: [jaeger_storage, jaeger_query, healthcheckv2]
@@ -36,6 +43,15 @@ extensions:
       endpoint: 0.0.0.0:16686
     grpc:
       endpoint: 0.0.0.0:16685
+    ai:
+      # Serves the Jaeger telemetry MCP tools (the "tiered" arm) at
+      # /api/ai/mcp/ on the query HTTP port above. agent_url must be set to
+      # an explicit empty string: absent, it keeps its seeded default
+      # (ws://localhost:16688, a nonexistent chat sidecar) and the AI health
+      # checker probes it forever (v2.20.0 flags.go DefaultQueryOptions).
+      # Empty + enable_mcp is the documented MCP-only mode.
+      agent_url: ""
+      enable_mcp: true
   healthcheckv2:
     use_v2: true
     http:
