@@ -12,12 +12,32 @@ Outputs:
 
 Per-cell metrics:
     n_trials, correct, incorrect, non_answer
-    pass_pow_n     (correct / n_trials, mean correctness)
+    pass_pow_n     (correct / scorable trials, mean correctness)
     pass_at_n      (any-trial correctness)
     error_pattern  (FP-rate vs FN-rate, descriptive)
     mean_input_tokens, mean_output_tokens, mean_cache_creation, mean_cache_read
     mean_tool_calls, mean_duration_ms
     sample_answer  (first correct answer; for human inspection)
+
+Arm 2 (docs/arm2-design.md) additive columns:
+    n_unscorable        trials whose ground truth was unavailable (scorer.py's
+                         "unscorable" verdict - a resolver-side gap, not an
+                         agent mistake). EXCLUDED from the pass_pow_n /
+                         pass_at_n denominators and reported only here, never
+                         folded into incorrect.
+    n_budget_exhausted   trials where the runner's TrialResult.budget_exhausted
+                         was True. These keep whatever verdict they scored
+                         (typically incorrect/non_answer, since the trial
+                         didn't finish) and are counted in both that verdict
+                         column AND here - it's an outcome tag, not a
+                         replacement verdict.
+    n_timeout            trials whose result "error" field is/contains
+                         "timeout". Same double-counting rule as
+                         n_budget_exhausted.
+Existing columns keep their names and semantics unchanged (additive only -
+arm-1 runs re-aggregate identically modulo the rare case where arm-1 itself
+now surfaces a genuinely missing ground truth as unscorable instead of
+incorrect, which is the crash fix scorer.py FIX 1 exists for).
 """
 
 from __future__ import annotations
@@ -59,10 +79,21 @@ def aggregate(run_dir: Path, ground_truth: dict) -> list[dict]:
             r = t.get("result") or {}
             ans = r.get("answer", "") or ""
             if not ans:
-                verdict = scorer.VERDICT_INCORRECT
-                expl = "no answer text"
+                # Arm-1 semantics preserved: empty answer text is always
+                # incorrect, UNLESS ground truth itself is unscorable
+                # (mirrors scorer.score()'s own gt check before dispatch) -
+                # a resolver failure isn't the agent's fault regardless of
+                # what it did or didn't say.
+                gt_entry = ground_truth.get(tid)
+                if not gt_entry or "value" not in gt_entry or gt_entry.get("value") is None:
+                    verdict, expl = scorer.score(tid, ans, ground_truth)
+                else:
+                    verdict = scorer.VERDICT_INCORRECT
+                    expl = "no answer text"
             else:
                 verdict, expl = scorer.score(tid, ans, ground_truth)
+
+            error_field = str(r.get("error") or "")
             scored_per_trial.append({
                 "verdict": verdict,
                 "explanation": expl,
@@ -73,12 +104,22 @@ def aggregate(run_dir: Path, ground_truth: dict) -> list[dict]:
                 "cache_read_tokens": r.get("cache_read_tokens") or 0,
                 "tool_calls": r.get("tool_calls") or 0,
                 "duration_ms": r.get("duration_ms") or 0,
+                "budget_exhausted": bool(r.get("budget_exhausted", False)),
+                "is_timeout": "timeout" in error_field.lower(),
             })
 
         n = len(scored_per_trial)
         correct = sum(1 for s in scored_per_trial if s["verdict"] == scorer.VERDICT_CORRECT)
         incorrect = sum(1 for s in scored_per_trial if s["verdict"] == scorer.VERDICT_INCORRECT)
         non_answer = sum(1 for s in scored_per_trial if s["verdict"] == scorer.VERDICT_NON_ANSWER)
+        unscorable = sum(1 for s in scored_per_trial if s["verdict"] == scorer.VERDICT_UNSCORABLE)
+        budget_exhausted = sum(1 for s in scored_per_trial if s["budget_exhausted"])
+        timeout = sum(1 for s in scored_per_trial if s["is_timeout"])
+
+        # Unscorable trials are excluded from the pass-rate denominator -
+        # there was no ground truth to pass or fail against - but n_trials
+        # itself stays the raw trial count (arm-1 semantics unchanged).
+        scorable_n = n - unscorable
 
         sample_correct = next((s["answer"][:200] for s in scored_per_trial if s["verdict"] == scorer.VERDICT_CORRECT), "")
         sample_incorrect = next((f"{s['explanation']} :: {s['answer'][:120]}" for s in scored_per_trial if s["verdict"] != scorer.VERDICT_CORRECT), "")
@@ -91,7 +132,7 @@ def aggregate(run_dir: Path, ground_truth: dict) -> list[dict]:
             "correct": correct,
             "incorrect": incorrect,
             "non_answer": non_answer,
-            "pass_pow_n": round(correct / n, 3) if n else 0,
+            "pass_pow_n": round(correct / scorable_n, 3) if scorable_n else 0,
             "pass_at_n": int(correct >= 1),
             "mean_input_tokens": round(statistics.mean(s["input_tokens"] for s in scored_per_trial), 1) if n else 0,
             "mean_output_tokens": round(statistics.mean(s["output_tokens"] for s in scored_per_trial), 1) if n else 0,
@@ -101,6 +142,9 @@ def aggregate(run_dir: Path, ground_truth: dict) -> list[dict]:
             "mean_duration_ms": round(statistics.mean(s["duration_ms"] for s in scored_per_trial)) if n else 0,
             "sample_correct": sample_correct,
             "sample_incorrect": sample_incorrect,
+            "n_unscorable": unscorable,
+            "n_budget_exhausted": budget_exhausted,
+            "n_timeout": timeout,
         })
     return rows
 
@@ -122,6 +166,7 @@ def write_markdown(rows: list[dict], out: Path) -> None:
     cols = ["model", "format", "task_id", "n_trials",
             "pass_pow_n", "pass_at_n",
             "correct", "incorrect", "non_answer",
+            "n_unscorable", "n_budget_exhausted", "n_timeout",
             "mean_cache_creation", "mean_output_tokens",
             "mean_tool_calls", "mean_duration_ms"]
     lines = []
