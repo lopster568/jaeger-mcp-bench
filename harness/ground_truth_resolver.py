@@ -351,7 +351,13 @@ HOTROD_SERVICES = ["frontend", "customer", "driver", "route", "mysql", "redis-ma
 ATTRIBUTE_HUNT_KEY = "param.driverID"
 DEPENDENCY_TARGET_SERVICE = "mysql"
 COMPARE_ROOT_SERVICE = "frontend"
-COMPARE_ROOT_OPERATION = "GET /dispatch"
+# "/dispatch", not "GET /dispatch": the compose fixture runs the
+# example-hotrod:1.71.0 image, whose frontend names the root span by bare
+# route path. (The hotrod in the jaeger v2 repo, with otelhttp semconv
+# naming, would call it "GET /dispatch" - verified live 2026-08-09 via
+# /api/services/frontend/operations: ["/", "HTTP GET",
+# "driver.DriverService/FindNearest", "/dispatch"].)
+COMPARE_ROOT_OPERATION = "/dispatch"
 
 
 class Arm2VolumeError(RuntimeError):
