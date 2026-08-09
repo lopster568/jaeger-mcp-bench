@@ -6,6 +6,12 @@
 #   degraded  - currently identical to steady; error injection is a TODO
 #               (hotrod's built-in latency/error behavior still applies)
 #   spike     - ramp 100 -> 300 req/min at T=5min; error injection is a TODO
+#   arm2      - fixed REQUEST COUNT instead of duration (default 80, override
+#               with REQUEST_COUNT). The arm-2 fixture protocol caps load at
+#               <=100 traces per task-relevant service (docs/arm2-design.md,
+#               Fixture) so both arms can enumerate the full candidate set;
+#               the ground-truth resolver hard-fails above the cap. Counting
+#               requests, not seconds, is what actually bounds trace volume.
 #
 # Default duration: 10 minutes. Override with DURATION_SEC env var.
 
@@ -13,6 +19,7 @@ set -euo pipefail
 
 SCENARIO="${SCENARIO:-degraded}"
 DURATION_SEC="${DURATION_SEC:-600}"
+REQUEST_COUNT="${REQUEST_COUNT:-80}"
 HOTROD_URL="${HOTROD_URL:-http://localhost:8080}"
 
 # Hotrod endpoints (per examples/hotrod/main.go):
@@ -32,9 +39,18 @@ end_at=$(( $(date +%s) + DURATION_SEC ))
 total=0
 errors=0
 
-echo "[load] scenario=${SCENARIO} duration=${DURATION_SEC}s target=${HOTROD_URL}"
+if [[ "${SCENARIO}" == "arm2" ]]; then
+  echo "[load] scenario=arm2 request_count=${REQUEST_COUNT} target=${HOTROD_URL}"
+else
+  echo "[load] scenario=${SCENARIO} duration=${DURATION_SEC}s target=${HOTROD_URL}"
+fi
 
-while [[ $(date +%s) -lt ${end_at} ]]; do
+while true; do
+  if [[ "${SCENARIO}" == "arm2" ]]; then
+    [[ $(( total + errors )) -lt ${REQUEST_COUNT} ]] || break
+  else
+    [[ $(date +%s) -lt ${end_at} ]] || break
+  fi
   # Rate logic per scenario (TODO: implement error injection)
   case "${SCENARIO}" in
     spike)
