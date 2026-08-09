@@ -31,13 +31,7 @@ from pathlib import Path
 import click
 
 import mcp_config
-
-CLEAN_SETTINGS_PATH = Path("/tmp/bench-clean-settings.json")
-CLEAN_SETTINGS = {
-    "enabledPlugins": {},
-    "permissions": {"allow": ["mcp__jaeger-bench__*"], "deny": []},
-    "extraKnownMarketplaces": {},
-}
+from claude_runner import CLEAN_SETTINGS_PATH, ensure_clean_settings
 
 
 @dataclass
@@ -187,8 +181,7 @@ def cli() -> None:
               help="Use an existing MCP config instead of generating one (skips server-binary check)")
 def capture(prompt, format_, jaeger_url, flat_url, model, out, timeout_sec, max_budget_usd, mcp_config_path):
     """Run one trial with stream-json and store raw events + parsed trajectory."""
-    if not CLEAN_SETTINGS_PATH.exists():
-        CLEAN_SETTINGS_PATH.write_text(json.dumps(CLEAN_SETTINGS, indent=2))
+    ensure_clean_settings()
     cfg_path = Path(mcp_config_path) if mcp_config_path else mcp_config.write_claude_config(
         format_, jaeger_url, flat_url,
     )

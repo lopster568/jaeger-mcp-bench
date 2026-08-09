@@ -29,6 +29,25 @@ from pathlib import Path
 from typing import Any
 
 
+# The clean-settings file the CLI is pointed at: empty plugins, MCP-only
+# permissions, so the trial baseline is constant across host machines. This
+# lives in /tmp and MUST be (re)created on every run - it silently vanishing
+# after a reboot took down all 56 trials of run 7ee37cd2 with rc=1 before a
+# single API call was made. trajectory_capture imports these same constants.
+CLEAN_SETTINGS_PATH = Path("/tmp/bench-clean-settings.json")
+CLEAN_SETTINGS = {
+    "enabledPlugins": {},
+    "permissions": {"allow": ["mcp__jaeger-bench__*"], "deny": []},
+    "extraKnownMarketplaces": {},
+}
+
+
+def ensure_clean_settings() -> Path:
+    if not CLEAN_SETTINGS_PATH.exists():
+        CLEAN_SETTINGS_PATH.write_text(json.dumps(CLEAN_SETTINGS, indent=2))
+    return CLEAN_SETTINGS_PATH
+
+
 @dataclass
 class TrialResult:
     answer: str
@@ -56,7 +75,7 @@ def run(
     timeout_sec: int = 180,
     max_budget_usd: float = 0.50,
 ) -> TrialResult:
-    clean_settings_path = "/tmp/bench-clean-settings.json"
+    clean_settings_path = str(ensure_clean_settings())
     cmd = [
         "claude",
         "-p", prompt,
