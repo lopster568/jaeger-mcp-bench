@@ -12,6 +12,7 @@ seed is recorded in the run manifest for reproducibility.
 
 from __future__ import annotations
 
+import fnmatch
 import json
 import random
 import sys
@@ -26,7 +27,7 @@ import yaml
 
 # Local imports
 sys.path.insert(0, str(Path(__file__).parent))
-from mcp_config import write_claude_config, write_gemini_config
+from mcp_config import DEFAULT_FLAT_URL, HTTP_FORMATS, STDIO_FORMATS, write_claude_config, write_gemini_config
 import claude_runner
 import gemini_runner
 
@@ -35,6 +36,8 @@ HERE = Path(__file__).parent
 ROOT = HERE.parent
 TASKS_DIR = ROOT / "tasks"
 RESULTS_DIR = ROOT / "results" / "runs"
+
+KNOWN_FORMATS = STDIO_FORMATS | HTTP_FORMATS
 
 
 def load_tasks(task_dir: Path) -> list[dict]:
@@ -57,19 +60,23 @@ def run_one(
     task: dict,
     trial_idx: int,
     jaeger_url: str,
+    flat_url: str,
+    timeout_sec: int,
 ) -> dict:
     if model == "claude":
-        cfg = write_claude_config(format_, jaeger_url=jaeger_url)
+        cfg = write_claude_config(format_, jaeger_url=jaeger_url, flat_url=flat_url)
         result = claude_runner.run(
             prompt=task["prompt"],
             mcp_config_path=cfg,
+            timeout_sec=timeout_sec,
         )
         return asdict(result)
     if model == "gemini":
-        cfg = write_gemini_config(format_, jaeger_url=jaeger_url)
+        cfg = write_gemini_config(format_, jaeger_url=jaeger_url, flat_url=flat_url)
         result = gemini_runner.run(
             prompt=task["prompt"],
             mcp_config_path=cfg,
+            timeout_sec=timeout_sec,
         )
         return asdict(result)
     raise ValueError(f"unknown model: {model}")
@@ -93,24 +100,44 @@ def matrix(
 @click.option("--models", default="claude,gemini", help="Comma-separated model list")
 @click.option("--formats", default="summary,series", help="Comma-separated format list")
 @click.option("--trials", default=3, type=int)
-@click.option("--jaeger-url", default="http://localhost:16686")
+@click.option("--jaeger-url", default="http://localhost:16686",
+              help="Base URL for the real Jaeger backend. Also used to derive the "
+                   "'tiered' arm's MCP endpoint (<jaeger-url>/api/ai/mcp/).")
+@click.option("--flat-url", default=DEFAULT_FLAT_URL,
+              help="Streamable-HTTP MCP endpoint for the 'flat' arm's flatserver.")
 @click.option("--task-glob", default="*", help="Filter tasks by id (substring match)")
 @click.option("--seed", default=42, type=int, help="RNG seed for cell-order shuffle")
 @click.option("--no-shuffle", is_flag=True, help="Run cells in deterministic order (legacy / debugging)")
+@click.option("--timeout-sec", default=180, type=int,
+              help="Per-trial wall-clock timeout, threaded to both runners. Arm 1 default "
+                   "(180s) preserved; the arm-2 design doc registers 600s as a CLI value for "
+                   "that run specifically, not a new default (docs/arm2-design.md, Matrix "
+                   "and budget).")
 @click.option("--dry-run", is_flag=True, help="Print the matrix without running")
-def main(models, formats, trials, jaeger_url, task_glob, seed, no_shuffle, dry_run):
+def main(models, formats, trials, jaeger_url, flat_url, task_glob, seed, no_shuffle, timeout_sec, dry_run):
     models_list = [m.strip() for m in models.split(",") if m.strip()]
     formats_list = [f.strip() for f in formats.split(",") if f.strip()]
+    unknown_formats = [f for f in formats_list if f not in KNOWN_FORMATS]
+    if unknown_formats:
+        click.echo(
+            f"unknown format(s) {unknown_formats}; known formats: {sorted(KNOWN_FORMATS)}",
+            err=True,
+        )
+        sys.exit(2)
     all_tasks = load_tasks(TASKS_DIR)
     if task_glob != "*":
-        all_tasks = [t for t in all_tasks if task_glob in t["id"]]
+        # Wildcard patterns get fnmatch semantics (e.g. "2*" selects the arm-2
+        # trace tasks); plain strings keep the original substring match.
+        if any(c in task_glob for c in "*?["):
+            all_tasks = [t for t in all_tasks if fnmatch.fnmatch(t["id"], task_glob)]
+        else:
+            all_tasks = [t for t in all_tasks if task_glob in t["id"]]
     if not all_tasks:
         click.echo("no tasks loaded", err=True)
         sys.exit(2)
 
     run_id = uuid.uuid4().hex[:8]
     run_root = RESULTS_DIR / run_id
-    run_root.mkdir(parents=True, exist_ok=True)
 
     cells = list(matrix(
         models=models_list, formats=formats_list, tasks=all_tasks, trials=trials,
@@ -123,7 +150,11 @@ def main(models, formats, trials, jaeger_url, task_glob, seed, no_shuffle, dry_r
         f"models={models_list} formats={formats_list} tasks={[t['id'] for t in all_tasks]}"
     )
 
+    if dry_run:
+        return
+
     # Persist run manifest for reproducibility
+    run_root.mkdir(parents=True, exist_ok=True)
     manifest = {
         "run_id": run_id,
         "started_at_unix": int(time.time()),
@@ -132,6 +163,9 @@ def main(models, formats, trials, jaeger_url, task_glob, seed, no_shuffle, dry_r
         "models": models_list,
         "formats": formats_list,
         "trials_per_cell": trials,
+        "jaeger_url": jaeger_url,
+        "flat_url": flat_url,
+        "timeout_sec": timeout_sec,
         "task_ids": [t["id"] for t in all_tasks],
         "cell_order": [
             {"model": m, "format": f, "task_id": t["id"], "trial": n}
@@ -140,9 +174,6 @@ def main(models, formats, trials, jaeger_url, task_glob, seed, no_shuffle, dry_r
     }
     with open(run_root / "manifest.json", "w") as f:
         json.dump(manifest, f, indent=2)
-
-    if dry_run:
-        return
 
     for i, (model, format_, task, n) in enumerate(cells, 1):
         click.echo(f"[{i}/{len(cells)}] model={model} format={format_} task={task['id']} trial={n}")
@@ -153,7 +184,8 @@ def main(models, formats, trials, jaeger_url, task_glob, seed, no_shuffle, dry_r
         try:
             result = run_one(
                 model=model, format_=format_, task=task,
-                trial_idx=n, jaeger_url=jaeger_url,
+                trial_idx=n, jaeger_url=jaeger_url, flat_url=flat_url,
+                timeout_sec=timeout_sec,
             )
         except Exception as e:
             result = {"success": False, "error": str(e), "exception_type": type(e).__name__}

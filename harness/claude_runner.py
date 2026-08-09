@@ -41,6 +41,11 @@ class TrialResult:
     raw_output: dict[str, Any]
     success: bool
     error: str | None = None
+    # True iff the trial ended because --max-budget-usd was hit (result
+    # envelope subtype "error_max_budget_usd") rather than a normal answer.
+    # Additive field - existing aggregators read tokens/answer/etc. via
+    # dict.get() and ignore unknown keys.
+    budget_exhausted: bool = False
 
 
 def run(
@@ -86,8 +91,51 @@ def run(
             raw_output={},
             success=False,
             error="timeout",
+            budget_exhausted=False,
         )
     elapsed_ms = int((time.monotonic() - t0) * 1000)
+
+    # `--output-format json` emits a structured result envelope
+    # (`{"type": "result", "subtype": ..., ...}`) even on controlled-failure
+    # exits, not just clean successes. Verified against the installed
+    # claude 2.1.226 binary: its bundled result schema is a Zod enum on
+    # `subtype` with exactly these non-success values -
+    #   error_during_execution | error_max_turns | error_max_budget_usd |
+    #   error_max_structured_output_retries
+    # - and a matching switch statement that prints "Exceeded USD budget
+    # ($X)" for error_max_budget_usd specifically (distinct from
+    # error_max_turns). Parse for `subtype` before branching on returncode,
+    # since a controlled-failure exit may still return non-zero while still
+    # printing this envelope; that lets budget/turn exhaustion get properly
+    # classified instead of falling into the generic "rc=N" bucket below.
+    data = None
+    try:
+        data = json.loads(proc.stdout)
+    except json.JSONDecodeError as e:
+        parse_error = e
+    else:
+        parse_error = None
+
+    if isinstance(data, dict) and "subtype" in data:
+        subtype = data.get("subtype")
+        usage = data.get("usage", {}) or {}
+        # num_turns counts conversational turns: user, assistant(tool_use)*, user(tool_result)*, assistant(answer).
+        # 1 tool call ≈ 2 extra turns. Approximation: max(0, (num_turns - 1) // 2).
+        num_turns = data.get("num_turns", 1) or 1
+        tool_calls_approx = max(0, (num_turns - 1) // 2)
+        return TrialResult(
+            answer=data.get("result", "") or "",
+            input_tokens=usage.get("input_tokens"),
+            output_tokens=usage.get("output_tokens"),
+            cache_read_tokens=usage.get("cache_read_input_tokens"),
+            cache_creation_tokens=usage.get("cache_creation_input_tokens"),
+            tool_calls=tool_calls_approx,
+            duration_ms=elapsed_ms,
+            raw_output=data,
+            success=True,
+            error=None if subtype == "success" else subtype,
+            budget_exhausted=(subtype == "error_max_budget_usd"),
+        )
 
     if proc.returncode != 0:
         return TrialResult(
@@ -99,11 +147,10 @@ def run(
             raw_output={"stderr": proc.stderr, "stdout": proc.stdout},
             success=False,
             error=f"rc={proc.returncode}",
+            budget_exhausted=False,
         )
 
-    try:
-        data = json.loads(proc.stdout)
-    except json.JSONDecodeError as e:
+    if parse_error is not None:
         return TrialResult(
             answer="",
             input_tokens=None, output_tokens=None,
@@ -112,12 +159,14 @@ def run(
             duration_ms=elapsed_ms,
             raw_output={"stdout": proc.stdout},
             success=False,
-            error=f"json decode: {e}",
+            error=f"json decode: {parse_error}",
+            budget_exhausted=False,
         )
 
+    # Parsed successfully, returncode 0, but no "subtype" key - unexpected
+    # shape under the documented schema; fall back to the old best-effort
+    # extraction rather than erroring out.
     usage = data.get("usage", {}) or {}
-    # num_turns counts conversational turns: user, assistant(tool_use)*, user(tool_result)*, assistant(answer).
-    # 1 tool call ≈ 2 extra turns. Approximation: max(0, (num_turns - 1) // 2).
     num_turns = data.get("num_turns", 1) or 1
     tool_calls_approx = max(0, (num_turns - 1) // 2)
     return TrialResult(
@@ -130,6 +179,7 @@ def run(
         duration_ms=elapsed_ms,
         raw_output=data,
         success=True,
+        budget_exhausted=False,
     )
 
 

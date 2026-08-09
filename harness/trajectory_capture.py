@@ -173,19 +173,25 @@ def cli() -> None:
 
 @cli.command()
 @click.option("--prompt", required=True)
-@click.option("--format", "format_", default="series", type=click.Choice(["summary", "series"]))
+@click.option("--format", "format_", default="series",
+              type=click.Choice(["summary", "series", "tiered", "flat"]))
 @click.option("--jaeger-url", default="http://localhost:16686")
+@click.option("--flat-url", default=mcp_config.DEFAULT_FLAT_URL,
+              help="Streamable-HTTP MCP endpoint for the 'flat' arm's flatserver "
+                   "(mirrors orchestrator.py's --flat-url; only relevant for --format flat).")
 @click.option("--model", default="sonnet")
 @click.option("--out", required=True, type=click.Path())
 @click.option("--timeout-sec", default=180)
 @click.option("--max-budget-usd", default=0.50)
 @click.option("--mcp-config-path", default=None, type=click.Path(exists=True),
               help="Use an existing MCP config instead of generating one (skips server-binary check)")
-def capture(prompt, format_, jaeger_url, model, out, timeout_sec, max_budget_usd, mcp_config_path):
+def capture(prompt, format_, jaeger_url, flat_url, model, out, timeout_sec, max_budget_usd, mcp_config_path):
     """Run one trial with stream-json and store raw events + parsed trajectory."""
     if not CLEAN_SETTINGS_PATH.exists():
         CLEAN_SETTINGS_PATH.write_text(json.dumps(CLEAN_SETTINGS, indent=2))
-    cfg_path = Path(mcp_config_path) if mcp_config_path else mcp_config.write_claude_config(format_, jaeger_url)
+    cfg_path = Path(mcp_config_path) if mcp_config_path else mcp_config.write_claude_config(
+        format_, jaeger_url, flat_url,
+    )
 
     cmd = [
         "claude",
@@ -211,7 +217,19 @@ def capture(prompt, format_, jaeger_url, model, out, timeout_sec, max_budget_usd
     (out_dir / "events.jsonl").write_text(proc.stdout)
     if proc.returncode != 0:
         (out_dir / "stderr.txt").write_text(proc.stderr)
-        raise click.ClickException(f"claude rc={proc.returncode}; stderr saved to {out_dir}/stderr.txt")
+        # Bug fix: a nonzero exit (budget exhaustion, context overflow, etc.)
+        # used to abort here before parsing - but those are exactly the
+        # trajectories H3/H4 care about most (docs/arm2-design.md:
+        # "budget_exhausted... outcome, not an error"). Warn and keep going
+        # instead of raising, so events.jsonl still gets classified into
+        # trajectory.json without manual repair; parse_events() already
+        # tolerates a truncated/partial event stream (skips unparseable
+        # lines), so a best-effort trajectory is still better than none.
+        click.echo(
+            f"warning: claude rc={proc.returncode}; stderr saved to {out_dir}/stderr.txt"
+            " - attempting to parse events.jsonl anyway",
+            err=True,
+        )
 
     traj = parse_events(proc.stdout.splitlines())
     if traj.duration_ms is None:

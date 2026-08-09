@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -39,6 +40,65 @@ class TrialResult:
     raw_output: dict[str, Any]
     success: bool
     error: str | None = None
+    # True iff the trial ended on a budget/context-exhaustion-shaped fatal
+    # error rather than a normal answer. Gemini CLI has no direct analogue
+    # of Claude's --max-budget-usd; see _classify_gemini_error for the
+    # heuristic and its sourcing. Additive field - existing aggregators read
+    # tokens/answer/etc. via dict.get() and ignore unknown keys.
+    budget_exhausted: bool = False
+
+
+# Gemini's non-interactive `--output-format json` mode writes fatal errors as
+# `console.error(JSON.stringify({error: {type, message, code?}}))` to
+# STDERR (not stdout) and exits non-zero - see handleError / JsonFormatter in
+# @google/gemini-cli-core 0.18.4, installed at
+# ~/.nvm/versions/node/v22.14.0/lib/node_modules/@google/gemini-cli/
+#   node_modules/@google/gemini-cli-core/dist/src/utils/errors.js
+#   node_modules/@google/gemini-cli-core/dist/src/output/json-formatter.js
+#
+# Gemini has no direct equivalent of --max-budget-usd. The closest proxies
+# for "ended due to budget/context exhaustion" found in that source:
+#   - FatalTurnLimitedError: raised when `maxSessionTurns` (settings.json) is
+#     exceeded. Default is -1 (unlimited) and the harness does not set it
+#     today, so this only fires if a session-turn cap is configured.
+#   - a generic error whose message indicates the prompt/context exceeded
+#     the model's token limit; these get wrapped by parseAndFormatApiError
+#     into "[API Error: <message> (Status: <status>)]" with
+#     error.type == "Error" (the generic JS Error constructor name), so
+#     type alone can't distinguish them from other API errors - message
+#     pattern matching is the only available signal.
+# This is a best-effort heuristic, not a documented contract. Flagged as an
+# open risk in the harness report: without a live fixture + trial that
+# actually exhausts context, the exact message text for a real
+# context-overflow error from the Gemini API is unverified.
+_BUDGET_ERROR_TYPES = frozenset({"FatalTurnLimitedError"})
+_CONTEXT_EXHAUSTION_RE = re.compile(
+    r"exceeds the maximum number of tokens"
+    r"|context length"
+    r"|context window"
+    r"|token count.*exceed"
+    r"|input is too long"
+    r"|maximum context",
+    re.IGNORECASE,
+)
+
+
+def _classify_gemini_error(stderr_text: str) -> tuple[bool, dict | None]:
+    """Best-effort classification of a Gemini CLI JSON-mode fatal error.
+
+    Returns (budget_exhausted, parsed_error_dict_or_None).
+    """
+    try:
+        parsed = json.loads(stderr_text)
+    except (json.JSONDecodeError, TypeError):
+        return False, None
+    err = parsed.get("error") if isinstance(parsed, dict) else None
+    if not isinstance(err, dict):
+        return False, None
+    etype = err.get("type", "") or ""
+    message = err.get("message", "") or ""
+    exhausted = etype in _BUDGET_ERROR_TYPES or bool(_CONTEXT_EXHAUSTION_RE.search(message))
+    return exhausted, err
 
 
 def run(
@@ -87,19 +147,29 @@ def run(
                 raw_output={},
                 success=False,
                 error="timeout",
+                budget_exhausted=False,
             )
         elapsed_ms = int((time.monotonic() - t0) * 1000)
 
         if proc.returncode != 0:
+            # Fatal errors (including the closest available proxies for
+            # budget/context exhaustion) are written to stderr as
+            # {"error": {...}} in --output-format json mode, not stdout -
+            # see _classify_gemini_error's docstring for sourcing.
+            budget_exhausted, gemini_error = _classify_gemini_error(proc.stderr)
+            error_msg = f"rc={proc.returncode}"
+            if gemini_error:
+                error_msg += f" type={gemini_error.get('type')}"
             return TrialResult(
                 answer="",
                 input_tokens=None, output_tokens=None,
                 cache_read_tokens=None, cache_creation_tokens=None,
                 tool_calls=0,
                 duration_ms=elapsed_ms,
-                raw_output={"stderr": proc.stderr, "stdout": proc.stdout},
+                raw_output={"stderr": proc.stderr, "stdout": proc.stdout, "gemini_error": gemini_error},
                 success=False,
-                error=f"rc={proc.returncode}",
+                error=error_msg,
+                budget_exhausted=budget_exhausted,
             )
 
         try:
@@ -114,6 +184,7 @@ def run(
                 raw_output={"stdout": proc.stdout},
                 success=False,
                 error=f"json decode: {e}",
+                budget_exhausted=False,
             )
 
         # Gemini CLI v0.18 token schema (verified via smoke test):
