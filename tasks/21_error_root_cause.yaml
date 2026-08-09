@@ -1,0 +1,26 @@
+id: "21_error_root_cause"
+predicted_winner: tiered
+scoring: programmatic
+tags: [error_analysis, root_cause, trace]
+
+prompt: |
+  Among the hotrod services (frontend, customer, driver, route, mysql,
+  redis-manual), look at the traces from the last 24 hours that contain
+  an error. Identify where the error actually originates: the deepest
+  failing span in the call chain, not just the outermost span where the
+  failure is first reported or retried. Report the service name and the
+  operation (span) name of that originating span.
+
+ground_truth:
+  type: structured
+  fields:
+    service: string
+    operation: string
+  selection_rule: >
+    Across all hotrod services, collect every trace in the last 24 hours
+    containing at least one error span (tag error=true / otel.status_code=
+    ERROR). Among all error spans in all such traces, pick the one at
+    maximum CHILD_OF-ancestor depth (root=0); ties broken by earliest trace
+    start time, then earliest span start time.
+  expected:
+    placeholder: true

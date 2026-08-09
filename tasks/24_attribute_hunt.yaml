@@ -1,0 +1,28 @@
+id: "24_attribute_hunt"
+predicted_winner: flat
+scoring: programmatic
+tags: [attribute_extraction, error_analysis, trace]
+
+prompt: |
+  In the last 24 hours, find the most recent trace of the driver service
+  that contains failing (error) spans. A trace can contain more than one
+  failing span: take the failing span with the earliest start time in
+  that trace, and report the value of its `param.driverID` attribute.
+
+ground_truth:
+  type: string
+  field: param_driver_id
+  selection_rule: >
+    Among traces of service=driver in the last 24 hours, pick the one with
+    the latest trace start time that contains at least one error span (tag
+    error=true / otel.status_code=ERROR) carrying a `param.driverID` tag.
+    Within that trace, pick the error span with the earliest span start
+    time (tie-break: lexicographically smallest span ID); the value is
+    read verbatim from its `param.driverID` tag. The earliest-start pin
+    exists because hotrod's fault injection (every 6th GetDriver call,
+    process-wide) routinely produces more than one failing span per
+    erroring trace. The resolver also records every failing span's
+    param.driverID in the run snapshot as `all_failing_ids` (audit field,
+    exploratory analysis only - scoring uses only the pinned span).
+  expected:
+    placeholder: true

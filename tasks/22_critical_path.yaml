@@ -1,0 +1,26 @@
+id: "22_critical_path"
+predicted_winner: tiered
+scoring: programmatic
+tags: [critical_path, self_time, trace]
+
+prompt: |
+  Find the slowest trace of the frontend service in the last 24 hours
+  (by total trace duration). Within that trace, which single operation
+  (service and operation/span name) contributes the most self time - the
+  time actually spent doing work in that operation itself, as opposed to
+  waiting on its children? Report the service and the operation name.
+
+ground_truth:
+  type: structured
+  fields:
+    service: string
+    operation: string
+  selection_rule: >
+    The trace of service=frontend in the last 24 hours with the largest
+    total duration (max span end - min span start across all spans in the
+    trace). Self-time is computed via Jaeger's critical-path algorithm
+    (last-finishing-child recursion; see criticalpath.go in the Jaeger
+    source), summed per (service, operation); the winner is the pair with
+    the largest total.
+  expected:
+    placeholder: true

@@ -1,0 +1,26 @@
+id: "26_compare_traces"
+predicted_winner: flat
+scoring: programmatic
+tags: [comparison, latency_breakdown, trace]
+
+prompt: |
+  The frontend service handles `GET /dispatch` requests. Comparing the
+  fastest and the slowest `GET /dispatch` trace from the last 24 hours,
+  which single operation (service and operation/span name) accounts for
+  the largest share of the extra time in the slow trace? Report the
+  service and the operation name.
+
+ground_truth:
+  type: structured
+  fields:
+    service: string
+    operation: string
+  selection_rule: >
+    Among traces of service=frontend, operation="GET /dispatch" in the
+    last 24 hours, take the one with minimum and the one with maximum
+    total trace duration. Compute critical-path self-time by
+    (service, operation) for each (same computation as task 22); the
+    answer is the pair with the largest positive delta (slow - fast,
+    missing counted as 0).
+  expected:
+    placeholder: true

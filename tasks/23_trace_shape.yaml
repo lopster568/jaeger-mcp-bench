@@ -1,0 +1,22 @@
+id: "23_trace_shape"
+predicted_winner: neutral
+scoring: programmatic
+tags: [trace_shape, structural, trace]
+
+prompt: |
+  Find the slowest trace of the driver service in the last 24 hours (by
+  total trace duration). How many spans does that trace contain in total,
+  and which services participate in it? List every participating service.
+
+ground_truth:
+  type: structured
+  fields:
+    span_count: int
+    services: list[string]
+  selection_rule: >
+    The trace of service=driver in the last 24 hours with the largest
+    total duration (max span end - min span start across all spans).
+    span_count = number of spans in that trace; services = the set of
+    distinct service names (from each span's process) present in it.
+  expected:
+    placeholder: true

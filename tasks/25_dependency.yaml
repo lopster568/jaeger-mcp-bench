@@ -1,0 +1,28 @@
+id: "25_dependency"
+predicted_winner: neutral
+scoring: programmatic
+tags: [dependency, topology, trace]
+
+prompt: |
+  Among the hotrod services, which service or services directly call the
+  mysql service? List exactly the direct caller service name(s) - every
+  direct caller, and no service that is not a direct caller. Then report
+  the operation (span) name that appears on the mysql spans in those
+  calls, based on a real trace from the last 24 hours.
+
+ground_truth:
+  type: structured
+  fields:
+    callers: list[string]
+    target_operation: string
+  selection_rule: >
+    Direct CHILD_OF callers of service=mysql observed in traces from the
+    last 24 hours (the immediate parent span's service, for every mysql
+    span), cross-checked against /api/dependencies over the same window.
+    target_operation is the operation name found on an observed mysql span.
+    The prompt demands an exact bare list so the scorer can penalize wrong
+    extras: a missing expected caller OR a named non-caller service both
+    score incorrect. Without that rule, hedging (naming every service)
+    would score correct and reward whichever arm over-lists more.
+  expected:
+    placeholder: true
