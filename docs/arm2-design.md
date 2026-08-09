@@ -53,13 +53,28 @@ Not a fork, not a patch. Anyone can pull the image and reproduce this arm.
 A small Go MCP server (`server/flatserver/`) exposing **one** tool:
 
 - `get_trace_data(service, lookback_minutes, limit, errors_only?)` — calls jaeger-query's
-  HTTP API (`/api/traces`), returns matching traces as **complete OTLP-shaped span dumps**:
-  every span, all attributes, events, links. No summarization, no topology view, no caps
-  beyond the caller's `limit`. Tool description states plainly what it returns.
+  HTTP API (`/api/traces`) and returns matching traces as **complete span dumps in that
+  endpoint's classic v1 JSON shape**: every span, all tags/attributes, logs/events,
+  references/links, verbatim. No summarization, no topology view, no caps beyond the
+  caller's `limit`. Tool description states plainly what it returns and nothing more — no
+  size warnings, no strategy hints.
 
 This is the integration most people actually build first: wrap the search endpoint, return
 the JSON, let the model figure it out. The arm must be a *fair* naive baseline, so it is not
 hobbled: same backend, same data fidelity, one honest tool.
+
+**The serialization format is part of the treatment, not a controlled variable.** The v1
+JSON shape is more token-verbose per attribute than the tiered tools' own output structs.
+That means H1's cost comparison measures *the shipped tiered design versus a naive wrapper
+as people actually build one* — inventory shape and serialization bundled together — not
+tool-count in isolation. Arm 1 already isolated output format as its own variable; arm 2
+does not re-isolate it. Claims in the writeup must be phrased accordingly.
+
+**Neutrality rule (both arms):** everything model-visible in the flat server's initialize
+payload (server name, version, instructions) and tool schema carries no experiment
+vocabulary — no "naive", "baseline", or "arm". Its instructions open with the same one-line
+domain framing as the tiered arm's INSTRUCTIONS.md and then stop; drill-down strategy is
+the tiered arm's treatment.
 
 Transport parity: flatserver also speaks streamable HTTP, so MCP client config differs only
 in URL. No stdio-vs-HTTP confound.
@@ -74,16 +89,34 @@ The existing compose stack (`compose/docker-compose.yml`) with two changes:
    are trace-based anyway.)
 2. Add `flatserver` as a compose service on the same bridge network.
 
-Traffic: `fixture/load.sh` against hotrod as in arm 1. Hotrod's randomness means trace IDs
-differ per fixture run, so no task prompt may reference a literal trace ID; tasks identify
-traces by property ("the slowest trace of service X in the last N minutes") and ground
-truth is resolved against the live API immediately before the run, exactly as arm 1's
-`ground_truth_resolver.py` does for metrics.
+Traffic: `fixture/load.sh` against hotrod as in arm 1, but **volume-capped**: the load run
+must leave **at most 100 traces per task-relevant service** in the store (~80 dispatch
+requests). 100 is the tiered arm's `MaxSearchResults` server cap and comfortably within the
+flat tool's caller-settable `limit`, so *both arms can enumerate the complete candidate set*
+— the benchmark then measures whether they do, not whether a server cap happened to hide the
+answer. The resolver enforces this: if any task's candidate set exceeds 100 traces it
+refuses to write ground truth and tells the operator to re-run the fixture with less load.
 
-**Freeze rule:** traffic generation stops before ground-truth resolution, and no trials run
-while `load.sh` is active. Both arms and the resolver then query an identical, static span
-store. (Arm 1 tolerated live traffic because its metrics windows were long; trace-level
-tasks are less forgiving.)
+Hotrod's randomness means trace IDs differ per fixture run, so no task prompt may reference
+a literal trace ID; tasks identify traces by property ("the slowest trace of service X")
+and ground truth is resolved against the live API immediately after traffic stops, exactly
+as arm 1's `ground_truth_resolver.py` does for metrics.
+
+**Freeze rule:** the run starts from a fresh stack (`docker compose down -v && up`) so the
+store contains only this run's traffic; traffic generation stops before ground-truth
+resolution; no trials run while `load.sh` is active. Both arms and the resolver then query
+an identical, static span store. (Arm 1 tolerated live traffic because its metrics windows
+were long; trace-level tasks are less forgiving.)
+
+**Window rule:** every task prompt frames its window as **the last 24 hours**, and the
+resolver computes ground truth over the same 24h lookback. With the store frozen, the
+entire fixture stays inside "the last 24 hours" for every trial no matter when it starts,
+so the candidate set is identical for the first trial and the last — a 60-minute window
+would silently decay across a multi-hour serial run, desynchronizing late trials from the
+frozen ground truth. The 24h window also matches `get_service_dependencies`' default
+lookback, and the fresh-stack rule guarantees it contains nothing but this run's traffic.
+The full matrix must therefore complete within ~20 hours of the freeze; at ~72 serial
+trials × ≤10 min it does so with a wide margin.
 
 ## Tasks
 
@@ -95,14 +128,25 @@ tiered, two predicted flat, two predicted neutral. Sketch (final prompts in the 
 | `21_error_root_cause` | Which service and operation is the root cause of errors in the last window? | tiered | `get_trace_errors` answers surgically; flat must scan dumps |
 | `22_critical_path` | For the slowest trace of service X, which operation contributes the most self-time? | tiered | `get_critical_path` computes it; flat must derive from raw timestamps |
 | `23_trace_shape` | How many spans and which services participate in the slowest trace of X? | neutral | topology tier vs a trivial count over the dump |
-| `24_attribute_hunt` | What is the value of attribute A on the failing span of the erroring request? | flat | the dump already contains it; tiered needs search → errors → details |
-| `25_dependency` | Which services directly call service X, and how does that path appear in a real trace? | neutral | `get_service_dependencies` vs deriving edges from spans |
+| `24_attribute_hunt` | What is the value of attribute A on the **earliest-starting** failing span of the erroring request? | flat | the dump already contains it; tiered needs search → errors → details |
+| `25_dependency` | Which services directly call service X? (bare list demanded) | neutral | `get_service_dependencies` vs deriving edges from spans |
 | `26_compare_traces` | Compare a fast and a slow trace of the same operation: where does the extra latency come from? | flat | needs breadth across two traces; drill-down costs many calls |
 
-Scoring is programmatic (`scorer.py` handlers per task, same verdict set:
-`correct / incorrect / non_answer`). Ground truth for every task is computable from the
-jaeger-query HTTP API with deterministic selection rules (max duration in window, max
-self-time, exact attribute value), written to the run's snapshot by an extended resolver.
+Task 24 pins the *earliest-starting* failing span because hotrod's fault injection (every
+6th `GetDriver` call, process-wide) routinely produces more than one failing span per
+erroring trace; "the failing span" without a tie-break would coin-flip honest answers. The
+resolver also records every failing span's attribute value as an audit field (exploratory
+only). Task 25's prompt demands a bare list of service names precisely so the scorer can
+penalize wrong extras — without that, hedging (listing every service) would score correct
+and reward whichever arm over-lists more.
+
+Scoring is programmatic (`scorer.py` handlers per task; verdicts
+`correct / incorrect / non_answer`, plus `unscorable` when the resolver could not produce
+ground truth for a task — unscorable trials are excluded from pass rates and reported as
+their own count, never silently folded into incorrect). Ground truth for every task is
+computable from the jaeger-query HTTP API with deterministic selection rules (max duration
+in window, max self-time, earliest-start tie-break, exact attribute value), written to the
+run's snapshot by an extended resolver.
 
 ## Matrix and budget
 
@@ -110,9 +154,15 @@ self-time, exact attribute value), written to the run's snapshot by an extended 
 seed 42, shuffled cell order, manifest persisted — identical machinery to arm 1
 (`orchestrator.py`, arm string routed through `--formats`).
 
-Per-trial budget stays at arm 1's cap. If a flat-arm trial exhausts budget or context, that
-is an **outcome, not an error**: recorded as `budget_exhausted` and reported. Silently
-raising the cap for one arm would bias the comparison.
+Per-trial budget stays at arm 1's cap ($0.50, Claude). The per-trial wall-clock timeout is
+raised to **600s for both arms** (orchestrator `--timeout-sec`; arm 1 used 180s) so that on
+large flat-arm fetches the *budget* is the binding constraint, not the clock — otherwise
+context-pressure failures would be recorded as generic timeouts and H4 undercounted. If a
+trial exhausts budget or context, that is an **outcome, not an error**: recorded as
+`budget_exhausted` and reported per cell by the aggregator (alongside a timeout count).
+Silently raising the cap for one arm would bias the comparison. Gemini has no budget-cap
+analogue; its exhaustion detection is a documented message-pattern heuristic, and gemini
+H4 numbers are reported with that caveat.
 
 ## Metrics
 
@@ -157,8 +207,30 @@ appears in the writeup must be labeled exploratory.
 | Drill-down conformance classifier | `harness/trajectory_capture.py` or new module | to build |
 | `budget_exhausted` outcome capture | runners | to extend |
 
-Aggregators need no changes for per-cell tables; the z-test pair list gets the four
-registered pairs above.
+Aggregator changes: `aggregate_v2.py` gains per-cell `unscorable`, `budget_exhausted` and
+`timeout` counts (unscorable excluded from pass rates); a dedicated `arm2_compare.py`
+implements the four registered z-test pairs (`cross_model_compare.py` stays arm-1-only —
+its tables are hardcoded to summary/series).
+
+## Run protocol (operator steps)
+
+```bash
+cd compose && docker compose down -v && docker compose up -d --build   # fresh stack
+sleep 30                                                               # stack warm-up
+SCENARIO=arm2 REQUEST_COUNT=80 bash ../fixture/load.sh                 # capped load, then FREEZE
+cd ../harness
+./.venv/bin/python ground_truth_resolver.py \
+    --jaeger-url http://localhost:16686 \
+    --output ../results/snapshots/gt-arm2-<date>.json                  # hard-fails if volume cap exceeded
+./.venv/bin/python orchestrator.py \
+    --formats tiered,flat --task-glob '2*' --trials 3 --seed 42 \
+    --timeout-sec 600                                                  # 72 trials
+./.venv/bin/python aggregate_v2.py --run-id <id> --ground-truth ../results/snapshots/gt-arm2-<date>.json
+./.venv/bin/python arm2_compare.py --run-id <id> --ground-truth ../results/snapshots/gt-arm2-<date>.json
+```
+
+No traffic between the freeze and the last trial. The whole matrix must finish within ~20h
+of the freeze (Window rule); expect 2-6h.
 
 ## What this arm cannot claim
 
