@@ -502,52 +502,104 @@ _HOTROD_SERVICE_NAMES = ["frontend", "customer", "driver", "route", "mysql", "re
 _TASK_25_TARGET_SERVICE = "mysql"
 
 
-# Negation/exclusion cues for _score_25's extras rule. A service name whose
-# every occurrence sits near one of these is being EXCLUDED by the answer
-# ("no other service - frontend, driver, route - calls mysql directly"),
-# not asserted as a caller. Window sizes are generous because the cue often
-# heads a long parenthetical listing several names.
+# ── Task 25 asserted-caller extraction ────────────────────────────────────
+#
+# v3. History, because this scorer ships with the writeup: v1 penalized ANY
+# mention of a non-caller (run d78bb27b showed exemplary answers name
+# non-callers precisely to exclude them); v2 exempted negation contexts but
+# still penalized call-chain narration ("frontend -> customer -> mysql",
+# run c429fafa claude/tiered/25 trial). v3 flips from blocklist to
+# allowlist: an extra only counts if the answer ASSERTS it as a caller,
+# via one of four extractors. Mere mention is never an assertion.
+
 _NEGATION_CUES = (
     "not", "no ", "none", "only", "other than", "except", "excluding",
     "exclude", "rather than", "instead of", "never", "n't",
 )
-_NEG_WINDOW_BEFORE = 100
-_NEG_WINDOW_AFTER = 60
+_CALL_VERBS = r"(?:calls?|called|calling|queries|query|querying|hits?|talks?\s+to|connects?\s+to)"
 
 
-def _asserted_occurrence_exists(ans: str, service: str) -> bool:
-    """True if at least one occurrence of `service` is NOT inside a
-    negation/exclusion context window. Searches the same name forms
-    _mentions_service accepts (canonical plus the bare-"redis" alias for
-    redis-manual), so an aliased mention can't dodge the extras rule."""
-    low = ans.lower()
+def _service_forms(service: str) -> list[str]:
     forms = [service.lower()]
     if service == "redis-manual":
         forms.append("redis")
-    for form in forms:
-        for m in re.finditer(r"\b" + re.escape(form) + r"\b", low):
-            window = low[max(0, m.start() - _NEG_WINDOW_BEFORE):m.end() + _NEG_WINDOW_AFTER]
-            if not any(cue in window for cue in _NEGATION_CUES):
-                return True
-    return False
+    return forms
+
+
+def _asserted_callers(ans: str, target: str, services: list[str]) -> set[str]:
+    """Services the answer ASSERTS as direct callers of `target`.
+
+    Extractors:
+      (a) arrow chains: in "A -> B -> target", only the token immediately
+          before the target is a direct-caller assertion; earlier chain
+          members are narration.
+      (b) verb assertions: "<svc> ... calls/queries ... <target>" within one
+          clause, unless a negation cue sits in the clause ("driver calls
+          redis-manual, not mysql" / "no other service ... calls mysql").
+      (c) caller-list statements: names inside the short span following
+          "caller(s) [of target] [is/are/:]".
+      (d) bare-list answers: an answer that is essentially just service
+          names asserts all of them.
+    """
+    low = ans.lower()
+    tgt = re.escape(target.lower())
+    asserted: set[str] = set()
+
+    def svc_at(fragment: str) -> list[str]:
+        found = []
+        for s in services:
+            if any(re.search(r"\b" + re.escape(f) + r"\b", fragment) for f in _service_forms(s)):
+                found.append(s)
+        return found
+
+    # (a) arrow chains: token immediately before the target
+    for m in re.finditer(r"([\w-]+)\s*(?:→|->|=>)\s*(?:the\s+)?" + tgt + r"\b", low):
+        asserted.update(svc_at(m.group(1)))
+
+    # (b) verb assertions, negation-guarded per clause
+    for s in services:
+        for form in _service_forms(s):
+            pat = (r"\b" + re.escape(form) + r"\b[^.\n;]{0,60}?\b" + _CALL_VERBS
+                   + r"\b[^.\n;]{0,50}?\b" + tgt + r"\b")
+            for m in re.finditer(pat, low):
+                clause_start = max(0, m.start() - 60)
+                clause = low[clause_start:m.end()]
+                if not any(cue in clause for cue in _NEGATION_CUES):
+                    asserted.add(s)
+        # reverse voice: "<target> is called/queried by <svc>"
+        rpat = (r"\b" + tgt + r"\b[^.\n;]{0,40}?\b(?:is|are|gets?)\s+"
+                r"(?:only\s+)?(?:called|queried|hit)\s+(?:directly\s+)?by\b[^.\n;]{0,60}")
+        for m in re.finditer(rpat, low):
+            asserted.update(svc_at(m.group(0)))
+
+    # (c) caller-list statements
+    for m in re.finditer(r"callers?\b(?:\s+of\s+\S+)?\s*(?:is|are|:|-)?\s*([^.\n]{0,80})", low):
+        seg = m.group(1)
+        if not any(cue in seg for cue in _NEGATION_CUES):
+            asserted.update(svc_at(seg))
+
+    # (d) bare-list answer: strip known names + connectors; if nothing
+    # substantive remains, every named service was an assertion
+    residue = low
+    for s in services:
+        for form in _service_forms(s):
+            residue = re.sub(r"\b" + re.escape(form) + r"\b", " ", residue)
+    residue = re.sub(r"\b(?:and|or|both|the|service|services)\b", " ", residue)
+    residue = re.sub(r"[\s,.;:&/()`*_-]+", "", residue)
+    if not residue:
+        asserted.update(svc_at(low))
+
+    return asserted
 
 
 def _score_25_dependency(ans: str, expected: dict, _gt) -> tuple[str, str]:
-    """Direct callers of the target service - a strict list with a
-    negation-aware extras rule.
+    """Direct callers of the target service - assertion-based scoring.
 
     Correct requires:
-      (a) every expected caller is named, AND
-      (b) no other hotrod service is ASSERTED as a caller. A service name
-          counts as asserted only if at least one of its occurrences sits
-          outside a negation/exclusion context (_asserted_occurrence_exists).
-          Run d78bb27b showed why any-mention strictness was wrong: the most
-          exemplary answers name the non-callers precisely to exclude them
-          ("customer - and only customer; no other service - frontend,
-          driver, route - calls mysql directly") and were scored incorrect,
-          and "route" the service name collides with "route" the verb
-          ("they route through customer"). A true hedge ("Both frontend and
-          customer call mysql") carries no negation cue and still fails.
+      (a) every expected caller is named somewhere in the answer, AND
+      (b) no other hotrod service is ASSERTED as a direct caller, per
+          _asserted_callers' four extractors (see its docstring and the v3
+          history note above it - the run evidence drove this design), AND
       (c) target_operation stays secondary color, not gating correctness -
           same 'primary signal wins' precedent as arm 1's
           _score_02/_score_04.
@@ -561,21 +613,19 @@ def _score_25_dependency(ans: str, expected: dict, _gt) -> tuple[str, str]:
     if not mentioned:
         return (VERDICT_NON_ANSWER, "no hotrod service name found in answer")
     missing = [c for c in expected_callers if c not in mentioned]
-    extras = [
-        s for s in mentioned
-        if s not in expected_callers and s != _TASK_25_TARGET_SERVICE
-        and _asserted_occurrence_exists(ans, s)
-    ]
+    candidates = [s for s in _HOTROD_SERVICE_NAMES if s != _TASK_25_TARGET_SERVICE]
+    asserted = _asserted_callers(ans, _TASK_25_TARGET_SERVICE, candidates)
+    extras = sorted(s for s in asserted if s not in expected_callers)
     if not missing and not extras:
         return (
             VERDICT_CORRECT,
             f"expected callers {expected_callers} named, no non-caller asserted"
-            f" (answer named: {mentioned})",
+            f" (asserted: {sorted(asserted)}; named: {mentioned})",
         )
     return (
         VERDICT_INCORRECT,
         f"missing callers {missing}; asserted non-callers {extras};"
-        f" answer named: {mentioned} (expected {expected_callers})",
+        f" asserted: {sorted(asserted)}; named: {mentioned} (expected {expected_callers})",
     )
 
 

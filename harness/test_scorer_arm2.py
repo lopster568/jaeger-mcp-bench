@@ -353,6 +353,32 @@ class Task25DependencyTest(unittest.TestCase):
             verdict, expl = scorer.score("25_dependency", ans, g)
             self.assertEqual(verdict, scorer.VERDICT_CORRECT, f"{expl}\n{ans[:80]}")
 
+    def test_chain_narration_is_not_an_assertion_regression_c429fafa(self):
+        """Regression from run c429fafa claude/tiered/25: a correct answer
+        narrates the call chain (frontend -> customer -> mysql) and names
+        frontend while establishing context; only the token immediately
+        before mysql in a chain is a direct-caller assertion."""
+        g = gt("25_dependency", self.expected)
+        ans = (
+            "The trace is rooted at frontend. Walking the chain frontend -> "
+            "customer -> mysql: this confirms the pattern - `customer` calls "
+            "`mysql` directly (span `f961c8a31ac69f04`, child of the "
+            "`/customer` span), with span name `SQL SELECT`.\n\n**Answer:**\n"
+            "- **Direct caller of mysql:** `customer` (only service that "
+            "calls mysql directly)\n- **Operation:** `SQL SELECT`"
+        )
+        verdict, expl = scorer.score("25_dependency", ans, g)
+        self.assertEqual(verdict, scorer.VERDICT_CORRECT, expl)
+
+    def test_arrow_chain_direct_link_is_an_assertion(self):
+        """The inverse of chain narration: an arrow pointing straight at
+        mysql from a non-caller IS an assertion and must fail."""
+        g = gt("25_dependency", self.expected)
+        verdict, expl = scorer.score(
+            "25_dependency", "Call graph: frontend -> mysql, customer -> mysql.", g,
+        )
+        self.assertEqual(verdict, scorer.VERDICT_INCORRECT, expl)
+
     def test_exact_bare_list_is_correct(self):
         g = gt("25_dependency", self.expected)
         verdict, expl = scorer.score("25_dependency", "customer.", g)
