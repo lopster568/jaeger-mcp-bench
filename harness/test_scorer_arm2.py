@@ -370,6 +370,21 @@ class Task25DependencyTest(unittest.TestCase):
         verdict, expl = scorer.score("25_dependency", ans, g)
         self.assertEqual(verdict, scorer.VERDICT_CORRECT, expl)
 
+    def test_long_exclusion_list_with_alias_regression_c429fafa_flat(self):
+        """Regression from run c429fafa claude/flat/25 trial_1: the negation
+        cue heads a long parenthetical exclusion list, so it sits further
+        from the aliased 'redis' hit than any fixed lookback window - the
+        guard must be sentence-scoped."""
+        g = gt("25_dependency", self.expected)
+        ans = (
+            "**Direct caller of `mysql`:** only the **`customer`** service - "
+            "every mysql span's parent is a span in `customer`. No other "
+            "hotrod service (`frontend`, `driver`, `route`, `mongodb`, "
+            "`redis`) calls mysql directly.\n\n**Operation name:** `SQL SELECT`"
+        )
+        verdict, expl = scorer.score("25_dependency", ans, g)
+        self.assertEqual(verdict, scorer.VERDICT_CORRECT, expl)
+
     def test_arrow_chain_direct_link_is_an_assertion(self):
         """The inverse of chain narration: an arrow pointing straight at
         mysql from a non-caller IS an assertion and must fail."""

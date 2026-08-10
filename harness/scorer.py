@@ -556,21 +556,40 @@ def _asserted_callers(ans: str, target: str, services: list[str]) -> set[str]:
     for m in re.finditer(r"([\w-]+)\s*(?:→|->|=>)\s*(?:the\s+)?" + tgt + r"\b", low):
         asserted.update(svc_at(m.group(1)))
 
-    # (b) verb assertions, negation-guarded per clause
+    # (b) verb assertions: anchor on "<call-verb> ... <target>", then walk
+    # BACK over the contiguous run of service names immediately before the
+    # verb - that run is the verb's subject. Fixed-width name-to-verb
+    # windows cannot discriminate here: chain narration ("frontend ->
+    # customer -> mysql: customer calls mysql") puts a non-subject name
+    # within any window wide enough for real subjects, and a long exclusion
+    # list ("No other hotrod service (frontend, driver, route, mongodb,
+    # redis) calls mysql") puts its negation cue outside any fixed lookback.
+    # The negation guard is sentence-scoped for the same reason. Both are
+    # pinned by run-c429fafa regression tests.
+    name_to_svc = {}
     for s in services:
         for form in _service_forms(s):
-            pat = (r"\b" + re.escape(form) + r"\b[^.\n;]{0,60}?\b" + _CALL_VERBS
-                   + r"\b[^.\n;]{0,50}?\b" + tgt + r"\b")
-            for m in re.finditer(pat, low):
-                clause_start = max(0, m.start() - 60)
-                clause = low[clause_start:m.end()]
-                if not any(cue in clause for cue in _NEGATION_CUES):
-                    asserted.add(s)
-        # reverse voice: "<target> is called/queried by <svc>"
-        rpat = (r"\b" + tgt + r"\b[^.\n;]{0,40}?\b(?:is|are|gets?)\s+"
-                r"(?:only\s+)?(?:called|queried|hit)\s+(?:directly\s+)?by\b[^.\n;]{0,60}")
-        for m in re.finditer(rpat, low):
-            asserted.update(svc_at(m.group(0)))
+            name_to_svc[form] = s
+    _SUBJECT_SEPS = {"and", "or", "both", "the", "service", "services", "&", "/"}
+    for m in re.finditer(r"\b" + _CALL_VERBS + r"\b[^.\n;]{0,50}?\b" + tgt + r"\b", low):
+        floor = max(0, m.start() - 300)
+        boundary = max(low.rfind(d, floor, m.start()) for d in (".", "\n", ";"))
+        sent_start = boundary + 1 if boundary >= 0 else floor
+        if any(cue in low[sent_start:m.end()] for cue in _NEGATION_CUES):
+            continue
+        pre_tokens = re.findall(r"[\w-]+|[^\w\s]", low[sent_start:m.start()])
+        for t in reversed(pre_tokens):
+            if t in name_to_svc:
+                asserted.add(name_to_svc[t])
+            elif t in _SUBJECT_SEPS or not t.isalnum():
+                continue
+            else:
+                break
+    # (b2) reverse voice: "<target> is called/queried by <svc>"
+    rpat = (r"\b" + tgt + r"\b[^.\n;]{0,40}?\b(?:is|are|gets?)\s+"
+            r"(?:only\s+)?(?:called|queried|hit)\s+(?:directly\s+)?by\b[^.\n;]{0,60}")
+    for m in re.finditer(rpat, low):
+        asserted.update(svc_at(m.group(0)))
 
     # (c) caller-list statements
     for m in re.finditer(r"callers?\b(?:\s+of\s+\S+)?\s*(?:is|are|:|-)?\s*([^.\n]{0,80})", low):
