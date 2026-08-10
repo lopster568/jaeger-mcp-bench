@@ -1,0 +1,96 @@
+{
+  "steps": [
+    {
+      "index": 0,
+      "tool": "ToolSearch",
+      "input_json": "{\"max_results\": 10, \"query\": \"select:mcp__jaeger-bench__read_skill,mcp__jaeger-bench__search_traces,mcp__jaeger-bench__get_trace_topology,mcp__jaeger-bench__get_critical_path,mcp__jaeger-bench__get_span_details,mcp__jaeger-bench__get_services,mcp__jaeger-bench__get_span_names,mcp__jaeger-bench__get_trace_errors,mcp__jaeger-bench__get_service_dependencies\"}",
+      "input_bytes": 358,
+      "result_bytes": 698,
+      "is_error": false
+    },
+    {
+      "index": 1,
+      "tool": "mcp__jaeger-bench__get_span_names",
+      "input_json": "{\"pattern\": \"dispatch\", \"service_name\": \"frontend\"}",
+      "input_bytes": 51,
+      "result_bytes": 92,
+      "is_error": false
+    },
+    {
+      "index": 2,
+      "tool": "mcp__jaeger-bench__search_traces",
+      "input_json": "{\"search_depth\": 50, \"service_name\": \"frontend\", \"span_name\": \"/dispatch\", \"start_time_min\": \"-24h\"}",
+      "input_bytes": 100,
+      "result_bytes": 14362,
+      "is_error": false
+    },
+    {
+      "index": 3,
+      "tool": "mcp__jaeger-bench__search_traces",
+      "input_json": "{\"duration_min\": \"800ms\", \"search_depth\": 50, \"service_name\": \"frontend\", \"span_name\": \"/dispatch\", \"start_time_min\": \"-24h\"}",
+      "input_bytes": 125,
+      "result_bytes": 2,
+      "is_error": false
+    },
+    {
+      "index": 4,
+      "tool": "mcp__jaeger-bench__search_traces",
+      "input_json": "{\"duration_max\": \"650ms\", \"search_depth\": 50, \"service_name\": \"frontend\", \"span_name\": \"/dispatch\", \"start_time_min\": \"-24h\"}",
+      "input_bytes": 125,
+      "result_bytes": 2,
+      "is_error": false
+    },
+    {
+      "index": 5,
+      "tool": "mcp__jaeger-bench__get_critical_path",
+      "input_json": "{\"trace_id\": \"2e5db112e04639a1e71394d5557c5cb8\"}",
+      "input_bytes": 48,
+      "result_bytes": 7807,
+      "is_error": false
+    },
+    {
+      "index": 6,
+      "tool": "mcp__jaeger-bench__get_critical_path",
+      "input_json": "{\"trace_id\": \"3f185804341eb70b9bc28a4e2282349a\"}",
+      "input_bytes": 48,
+      "result_bytes": 8060,
+      "is_error": false
+    }
+  ],
+  "tool_calls": 7,
+  "error_calls": 0,
+  "result_bytes_total": 31023,
+  "final_answer": "**Service: `mysql` \u2014 Operation: `SQL SELECT`**\n\nComparing the fastest (669,553 \u00b5s) and slowest (797,434 \u00b5s) `/dispatch` traces from the last 24h (trace IDs `3f185804341eb70b9bc28a4e2282349a` fast vs `2e5db112e04639a1e71394d5557c5cb8` slow) using critical-path self-time analysis:\n\n| Operation | Fast (\u00b5s) | Slow (\u00b5s) | Extra time (\u00b5s) | Share of total extra |\n|---|---|---|---|---|\n| **mysql: SQL SELECT** | 285,311 | 360,512 | **+75,201** | **~59%** |\n| redis-manual: GetDriver | 174,985 | 201,946 | +26,961 | ~21% |\n| redis-manual: FindDriverIDs | 13,428 | 33,903 | +20,475 | ~16% |\n| route: /route | 183,435 | 190,292 | +6,857 | ~5% |\n| (all others) | \u2014 | \u2014 | ~-3,600 (net faster) | \u2014 |\n\nTotal extra time between the two traces is ~127.9ms, and the single `mysql` `SQL SELECT` span (issued by the `customer` service's `/customer` call) accounts for ~75.2ms of that \u2014 by far the largest single contributor, roughly 3x the next-largest source (Redis `GetDriver` calls).",
+  "num_turns": 8,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 24765,
+    "cache_read_input_tokens": 225894,
+    "output_tokens": 5886,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 24765,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2646,
+        "cache_read_input_tokens": 45010,
+        "cache_creation_input_tokens": 8119,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8119
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "duration_ms": 73224
+}

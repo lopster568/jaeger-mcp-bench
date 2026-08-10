@@ -1,0 +1,85 @@
+{
+  "run_id": "c429fafa",
+  "model": "claude",
+  "format": "tiered",
+  "task_id": "26_compare_traces",
+  "trial": 0,
+  "ts_unix": 1786342127,
+  "result": {
+    "answer": "**Slowest** `/dispatch` trace: `2e5db112e04639a1e71394d5557c5cb8` \u2014 797.4 ms\n**Fastest** `/dispatch` trace: `3f185804341eb70b9bc28a4e2282349a` \u2014 669.6 ms\nExtra time in the slow trace: ~127.9 ms\n\nComparing self-time on the critical path, aggregated by (service, operation):\n\n| Service | Operation | Fast | Slow | \u0394 (extra) |\n|---|---|---|---|---|\n| **mysql** | **SQL SELECT** | 285.3 ms | 360.5 ms | **+75.2 ms** |\n| redis-manual | GetDriver | 175.0 ms | 201.9 ms | +27.0 ms |\n| redis-manual | FindDriverIDs | 13.4 ms | 33.9 ms | +20.5 ms |\n| driver | FindNearest | 0.6 ms | 1.8 ms | +1.2 ms |\n| route | /route | 183.4 ms | 190.3 ms | +6.9 ms |\n| (others) | | | | small/negative |\n\n**Answer: `mysql` / `SQL SELECT`** \u2014 the SQL SELECT query issued by the `customer` service's `/customer` handler accounts for the largest share of the extra time, contributing ~75.2 ms of the ~127.9 ms total slowdown (about 59%). The next largest contributor is `redis-manual`'s `GetDriver` calls (+27 ms), but it's well behind the MySQL query.",
+    "input_tokens": 16,
+    "output_tokens": 5117,
+    "cache_read_tokens": 295208,
+    "cache_creation_tokens": 15426,
+    "tool_calls": 5,
+    "duration_ms": 56916,
+    "raw_output": {
+      "is_error": false,
+      "duration_api_ms": 53741,
+      "num_turns": 11,
+      "stop_reason": "end_turn",
+      "session_id": "30e8e95e-f4cc-4760-b283-ee2b1f3bc7dc",
+      "total_cost_usd": 0.2579214,
+      "usage": {
+        "input_tokens": 16,
+        "cache_creation_input_tokens": 15426,
+        "cache_read_input_tokens": 295208,
+        "output_tokens": 5117,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 15426,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 2795,
+            "cache_read_input_tokens": 40654,
+            "cache_creation_input_tokens": 7863,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 7863
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-5": {
+          "inputTokens": 16,
+          "outputTokens": 5117,
+          "cacheReadInputTokens": 295208,
+          "cacheCreationInputTokens": 15426,
+          "webSearchRequests": 0,
+          "costUSD": 0.2579214,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 64000,
+          "canonicalModel": "claude-sonnet-5",
+          "provider": "firstParty"
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "fast_mode_disabled_reason": "sdk_opt_in_required",
+      "subtype": "success",
+      "api_error_status": null,
+      "result": "**Slowest** `/dispatch` trace: `2e5db112e04639a1e71394d5557c5cb8` \u2014 797.4 ms\n**Fastest** `/dispatch` trace: `3f185804341eb70b9bc28a4e2282349a` \u2014 669.6 ms\nExtra time in the slow trace: ~127.9 ms\n\nComparing self-time on the critical path, aggregated by (service, operation):\n\n| Service | Operation | Fast | Slow | \u0394 (extra) |\n|---|---|---|---|---|\n| **mysql** | **SQL SELECT** | 285.3 ms | 360.5 ms | **+75.2 ms** |\n| redis-manual | GetDriver | 175.0 ms | 201.9 ms | +27.0 ms |\n| redis-manual | FindDriverIDs | 13.4 ms | 33.9 ms | +20.5 ms |\n| driver | FindNearest | 0.6 ms | 1.8 ms | +1.2 ms |\n| route | /route | 183.4 ms | 190.3 ms | +6.9 ms |\n| (others) | | | | small/negative |\n\n**Answer: `mysql` / `SQL SELECT`** \u2014 the SQL SELECT query issued by the `customer` service's `/customer` handler accounts for the largest share of the extra time, contributing ~75.2 ms of the ~127.9 ms total slowdown (about 59%). The next largest contributor is `redis-manual`'s `GetDriver` calls (+27 ms), but it's well behind the MySQL query.",
+      "ttft_ms": 2444,
+      "ttft_stream_ms": 1827,
+      "time_to_request_ms": 149,
+      "type": "result",
+      "duration_ms": 54008,
+      "uuid": "72407b82-760c-4f67-acd8-5b6e91745e2d"
+    },
+    "success": true,
+    "error": null,
+    "budget_exhausted": false
+  }
+}

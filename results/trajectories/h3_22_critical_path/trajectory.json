@@ -1,0 +1,80 @@
+{
+  "steps": [
+    {
+      "index": 0,
+      "tool": "ToolSearch",
+      "input_json": "{\"max_results\": 10, \"query\": \"select:mcp__jaeger-bench__search_traces,mcp__jaeger-bench__get_critical_path,mcp__jaeger-bench__get_services,mcp__jaeger-bench__get_trace_topology,mcp__jaeger-bench__get_span_details,mcp__jaeger-bench__read_skill\"}",
+      "input_bytes": 244,
+      "result_bytes": 458,
+      "is_error": false
+    },
+    {
+      "index": 1,
+      "tool": "mcp__jaeger-bench__read_skill",
+      "input_json": "{\"path\": \"SKILL.md\"}",
+      "input_bytes": 20,
+      "result_bytes": 685,
+      "is_error": false
+    },
+    {
+      "index": 2,
+      "tool": "mcp__jaeger-bench__search_traces",
+      "input_json": "{\"search_depth\": 50, \"service_name\": \"frontend\", \"start_time_min\": \"-24h\"}",
+      "input_bytes": 74,
+      "result_bytes": 13488,
+      "is_error": false
+    },
+    {
+      "index": 3,
+      "tool": "mcp__jaeger-bench__search_traces",
+      "input_json": "{\"duration_min\": \"790ms\", \"search_depth\": 50, \"service_name\": \"frontend\", \"start_time_min\": \"-24h\"}",
+      "input_bytes": 99,
+      "result_bytes": 299,
+      "is_error": false
+    },
+    {
+      "index": 4,
+      "tool": "mcp__jaeger-bench__get_critical_path",
+      "input_json": "{\"trace_id\": \"2e5db112e04639a1e71394d5557c5cb8\"}",
+      "input_bytes": 48,
+      "result_bytes": 7807,
+      "is_error": false
+    }
+  ],
+  "tool_calls": 5,
+  "error_calls": 0,
+  "result_bytes_total": 22737,
+  "final_answer": "**Slowest trace (last 24h, frontend service):** `2e5db112e04639a1e71394d5557c5cb8` \u2014 total duration 797,434 \u00b5s (~797ms), root span `/dispatch`. It's the only frontend trace over 790ms in the window.\n\n**Operation with the most self time:** `mysql` \u2014 **`SQL SELECT`** (span `593af867a29f2061`), with **360,512 \u00b5s** of self time \u2014 about 45% of the entire trace's duration spent in that single query, far ahead of the next-largest contributors (the three `route` service `/route` calls at ~53\u201380ms self time each, and the aggregate of ~13 `redis-manual` `GetDriver` calls at ~202ms combined).",
+  "num_turns": 6,
+  "usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 19691,
+    "cache_read_input_tokens": 222816,
+    "output_tokens": 4586,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19691,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1847,
+        "cache_read_input_tokens": 44255,
+        "cache_creation_input_tokens": 3800,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3800
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "duration_ms": 64563
+}

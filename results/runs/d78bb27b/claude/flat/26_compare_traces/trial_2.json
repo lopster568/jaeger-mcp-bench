@@ -1,0 +1,171 @@
+{
+  "run_id": "d78bb27b",
+  "model": "claude",
+  "format": "flat",
+  "task_id": "26_compare_traces",
+  "trial": 2,
+  "ts_unix": 1786306768,
+  "result": {
+    "answer": "",
+    "input_tokens": 42,
+    "output_tokens": 6178,
+    "cache_read_tokens": 927583,
+    "cache_creation_tokens": 21375,
+    "tool_calls": 11,
+    "duration_ms": 91196,
+    "raw_output": {
+      "is_error": true,
+      "duration_api_ms": 81826,
+      "num_turns": 24,
+      "stop_reason": "tool_use",
+      "session_id": "f9555ae4-3903-4283-a49f-21af8bb3f5c0",
+      "total_cost_usd": 0.5221416,
+      "usage": {
+        "input_tokens": 42,
+        "cache_creation_input_tokens": 21375,
+        "cache_read_input_tokens": 927583,
+        "output_tokens": 6178,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 21375,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 261,
+            "cache_read_input_tokens": 49281,
+            "cache_creation_input_tokens": 458,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 458
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-5": {
+          "inputTokens": 44,
+          "outputTokens": 6563,
+          "cacheReadInputTokens": 977322,
+          "cacheCreationInputTokens": 21728,
+          "webSearchRequests": 0,
+          "costUSD": 0.5221416,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 64000,
+          "canonicalModel": "claude-sonnet-5",
+          "provider": "firstParty"
+        }
+      },
+      "permission_denials": [
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01QEs2P4ePMsPJXiGHaaRe2g",
+          "tool_input": {
+            "command": "f=/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/f9555ae4-3903-4283-a49f-21af8bb3f5c0/tool-results/mcp-jaeger-bench-get_trace_data-1786306690498.txt\nwc -c \"$f\"\npython3 -c \"\nimport json\nwith open('$f') as fh:\n    data = json.load(fh)\nprint(type(data))\nif isinstance(data, dict):\n    print(list(data.keys()))\nelif isinstance(data, list):\n    print(len(data))\n    print(json.dumps(data[0], indent=2)[:2000])\n\"\n"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_011i3wFy4ow6UVUzc5vstVee",
+          "tool_input": {
+            "command": "f=/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/f9555ae4-3903-4283-a49f-21af8bb3f5c0/tool-results/mcp-jaeger-bench-get_trace_data-1786306690498.txt\nwc -c \"$f\"",
+            "description": "Check size of saved trace data file"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01YBKDqsMnWAuLQosG42htb6",
+          "tool_input": {
+            "command": "f=/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/f9555ae4-3903-4283-a49f-21af8bb3f5c0/tool-results/mcp-jaeger-bench-get_trace_data-1786306690498.txt\npython3 -c \"\nimport json\nwith open('$f') as fh:\n    data = json.load(fh)\nprint(type(data))\nif isinstance(data, dict):\n    print(list(data.keys()))\nelif isinstance(data, list):\n    print(len(data))\n    print(json.dumps(data[0], indent=2)[:3000])\n\"\n",
+            "description": "Inspect JSON structure of trace data"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01BoJNcRRwfRZJDvw9aZoSut",
+          "tool_input": {
+            "command": "python3 -c \"\nimport json\nwith open('/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/f9555ae4-3903-4283-a49f-21af8bb3f5c0/tool-results/mcp-jaeger-bench-get_trace_data-1786306690498.txt') as fh:\n    data = json.load(fh)\nprint(type(data))\nif isinstance(data, dict):\n    print(list(data.keys()))\nelif isinstance(data, list):\n    print(len(data))\n    print(json.dumps(data[0], indent=2)[:3000])\n\"\n",
+            "description": "Inspect JSON structure of trace data"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01QnExSjeBtWkzcgpDcsujqe",
+          "tool_input": {
+            "command": "python3 -c \"\nimport json\nwith open('/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/f9555ae4-3903-4283-a49f-21af8bb3f5c0/tool-results/mcp-jaeger-bench-get_trace_data-1786306690498.txt') as fh:\n    data = json.load(fh)\nprint(type(data))\nif isinstance(data, dict):\n    print(list(data.keys()))\nelif isinstance(data, list):\n    print(len(data))\n    print(json.dumps(data[0], indent=2)[:3000])\n\"\n",
+            "description": "Inspect JSON structure of trace data"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01AvWgrUCCpA5uiAZ8BzFCdg",
+          "tool_input": {
+            "command": "f=/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/f9555ae4-3903-4283-a49f-21af8bb3f5c0/tool-results/mcp-jaeger-bench-get_trace_data-1786306690498.txt\njq '.data[0].spans[0]' \"$f\"",
+            "description": "Inspect first span structure"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01A1HwFThh4kn2HNj5rNuNxX",
+          "tool_input": {
+            "command": "f=/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/f9555ae4-3903-4283-a49f-21af8bb3f5c0/tool-results/mcp-jaeger-bench-get_trace_data-1786306690498.txt\njq '.data[0].spans[0]' \"$f\"",
+            "description": "Inspect first span structure"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01UFiCip6nhYJGK2wEHw5mBL",
+          "tool_input": {
+            "command": "f=/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/f9555ae4-3903-4283-a49f-21af8bb3f5c0/tool-results/mcp-jaeger-bench-get_trace_data-1786306690498.txt\njq '.data[0].processes' \"$f\"",
+            "description": "Inspect processes mapping for first trace"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01YSXoyrPRsGxcfkLPokStxW",
+          "tool_input": {
+            "command": "f=/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/f9555ae4-3903-4283-a49f-21af8bb3f5c0/tool-results/mcp-jaeger-bench-get_trace_data-1786306690498.txt\njq -r '.data[] as $t | $t.spans[] | select(.operationName==\"/dispatch\") | [$t.traceID, .spanID, .duration, .startTime, (.references|length)] | @tsv' \"$f\" | sort -t$'\\t' -k3 -n",
+            "description": "List dispatch root spans sorted by duration"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01NKUe7zVZzMQKRXNJJVWqmk",
+          "tool_input": {
+            "command": "f=/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/f9555ae4-3903-4283-a49f-21af8bb3f5c0/tool-results/mcp-jaeger-bench-get_trace_data-1786306690498.txt\njq -r '.data[] as $t | $t.spans[] | select(.operationName==\"/dispatch\") | [$t.traceID, .spanID, .duration, .startTime, (.references|length)] | @tsv' \"$f\" | sort -k3 -n",
+            "description": "List dispatch root spans sorted by duration"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01PSE6Cs1KwhG8QxmcjyAxbC",
+          "tool_input": {
+            "command": "f=/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/f9555ae4-3903-4283-a49f-21af8bb3f5c0/tool-results/mcp-jaeger-bench-get_trace_data-1786306690498.txt\njq -r '.data[] as $t | $t.spans[] | select(.operationName==\"/dispatch\") | [$t.traceID, .spanID, .duration, .startTime, (.references|length)] | @tsv' \"$f\" | sort -k3 -n",
+            "description": "List dispatch root spans sorted by duration"
+          }
+        }
+      ],
+      "terminal_reason": "budget_exhausted",
+      "fast_mode_state": "off",
+      "fast_mode_disabled_reason": "sdk_opt_in_required",
+      "subtype": "error_max_budget_usd",
+      "errors": [
+        "Reached maximum budget ($0.5)"
+      ],
+      "type": "result",
+      "duration_ms": 89409,
+      "uuid": "dce3bcca-bc45-4ea9-8053-a8c2ac532054"
+    },
+    "success": true,
+    "error": "error_max_budget_usd",
+    "budget_exhausted": true
+  }
+}

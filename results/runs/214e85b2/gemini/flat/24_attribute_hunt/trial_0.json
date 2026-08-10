@@ -1,0 +1,72 @@
+{
+  "run_id": "214e85b2",
+  "model": "gemini",
+  "format": "flat",
+  "task_id": "24_attribute_hunt",
+  "trial": 0,
+  "ts_unix": 1786339730,
+  "result": {
+    "answer": "No failing traces were found for the driver service in the last 24 hours.",
+    "input_tokens": 11954,
+    "output_tokens": 33,
+    "cache_read_tokens": 9769,
+    "cache_creation_tokens": null,
+    "tool_calls": 1,
+    "duration_ms": 25572,
+    "raw_output": {
+      "response": "No failing traces were found for the driver service in the last 24 hours.",
+      "stats": {
+        "models": {
+          "gemini-2.5-pro": {
+            "api": {
+              "totalRequests": 2,
+              "totalErrors": 0,
+              "totalLatencyMs": 10845
+            },
+            "tokens": {
+              "prompt": 11954,
+              "candidates": 33,
+              "total": 12588,
+              "cached": 9769,
+              "thoughts": 601,
+              "tool": 0
+            }
+          }
+        },
+        "tools": {
+          "totalCalls": 1,
+          "totalSuccess": 1,
+          "totalFail": 0,
+          "totalDurationMs": 11,
+          "totalDecisions": {
+            "accept": 0,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 1
+          },
+          "byName": {
+            "get_trace_data": {
+              "count": 1,
+              "success": 1,
+              "fail": 0,
+              "durationMs": 11,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 1
+              }
+            }
+          }
+        },
+        "files": {
+          "totalLinesAdded": 0,
+          "totalLinesRemoved": 0
+        }
+      }
+    },
+    "success": true,
+    "error": null,
+    "budget_exhausted": false
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "run_id": "214e85b2",
+  "model": "gemini",
+  "format": "tiered",
+  "task_id": "26_compare_traces",
+  "trial": 1,
+  "ts_unix": 1786341527,
+  "result": {
+    "answer": "",
+    "input_tokens": null,
+    "output_tokens": null,
+    "cache_read_tokens": null,
+    "cache_creation_tokens": null,
+    "tool_calls": 0,
+    "duration_ms": 87048,
+    "raw_output": {
+      "stderr": "YOLO mode is enabled. All tool calls will be automatically approved.\nLoaded cached credentials.\nError executing tool jaeger_service.search_traces: Tool \"jaeger_service.search_traces\" not found in registry. Tools must use the exact names that are registered. Did you mean one of: \"get_service_dependencies\", \"search_traces\", \"get_services\"?\nError executing tool jaeger_service_search_traces: Tool \"jaeger_service_search_traces\" not found in registry. Tools must use the exact names that are registered. Did you mean one of: \"get_service_dependencies\", \"search_traces\", \"get_services\"?\nError when talking to Gemini API Full report available at: /tmp/gemini-client-error-Turn.run-sendMessageStream-2026-08-10T05-58-47-385Z.json\n{\n  \"error\": {\n    \"type\": \"Error\",\n    \"message\": \"[object Object]\",\n    \"code\": 1\n  }\n}\n",
+      "stdout": "",
+      "gemini_error": null
+    },
+    "success": false,
+    "error": "rc=1",
+    "budget_exhausted": false
+  }
+}

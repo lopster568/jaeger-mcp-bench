@@ -1,0 +1,85 @@
+{
+  "run_id": "c429fafa",
+  "model": "claude",
+  "format": "tiered",
+  "task_id": "26_compare_traces",
+  "trial": 1,
+  "ts_unix": 1786339883,
+  "result": {
+    "answer": "**Answer: `mysql` / `SQL SELECT`**\n\nComparing the fastest and slowest `/dispatch` traces from the last 24h:\n\n- **Slowest:** `2e5db112e04639a1e71394d5557c5cb8` \u2014 797.4 ms\n- **Fastest:** `3f185804341eb70b9bc28a4e2282349a` \u2014 669.6 ms\n- **Extra time:** ~127.9 ms\n\nAggregating self-time by (service, operation) along each trace's critical path and diffing:\n\n| service / operation | fast (self, ms) | slow (self, ms) | \u0394 (ms) |\n|---|---|---|---|\n| **mysql / SQL SELECT** | 285.3 | 360.5 | **+75.2** |\n| redis-manual / GetDriver (\u00d7~12-13 calls) | 175.0 | 201.9 | +27.0 |\n| redis-manual / FindDriverIDs | 13.4 | 33.9 | +20.5 |\n| driver / FindNearest | 0.6 | 1.8 | +1.2 |\n| route / /route (\u00d74 calls) | 183.4 | 190.3 | +6.9 |\n| frontend / HTTP GET, /dispatch, FindNearest | ~11.2 | ~8.7 | -2.5 |\n\nThe single `mysql` `SQL SELECT` call (invoked once, inside the `customer` service's `/customer` lookup) alone accounts for **+75.2 ms**, roughly **59% of the total 127.9 ms gap** between the fastest and slowest trace \u2014 more than all the repeated Redis `GetDriver` calls combined.",
+    "input_tokens": 18,
+    "output_tokens": 7083,
+    "cache_read_tokens": 370645,
+    "cache_creation_tokens": 32948,
+    "tool_calls": 6,
+    "duration_ms": 81073,
+    "raw_output": {
+      "is_error": false,
+      "duration_api_ms": 76966,
+      "num_turns": 13,
+      "stop_reason": "end_turn",
+      "session_id": "cb04e339-38fe-474c-8d4c-f528ea66181d",
+      "total_cost_usd": 0.41518049999999995,
+      "usage": {
+        "input_tokens": 18,
+        "cache_creation_input_tokens": 32948,
+        "cache_read_input_tokens": 370645,
+        "output_tokens": 7083,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 32948,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 3346,
+            "cache_read_input_tokens": 53483,
+            "cache_creation_input_tokens": 7829,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 7829
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-5": {
+          "inputTokens": 18,
+          "outputTokens": 7083,
+          "cacheReadInputTokens": 370645,
+          "cacheCreationInputTokens": 32948,
+          "webSearchRequests": 0,
+          "costUSD": 0.41518049999999995,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 64000,
+          "canonicalModel": "claude-sonnet-5",
+          "provider": "firstParty"
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "fast_mode_disabled_reason": "sdk_opt_in_required",
+      "subtype": "success",
+      "api_error_status": null,
+      "result": "**Answer: `mysql` / `SQL SELECT`**\n\nComparing the fastest and slowest `/dispatch` traces from the last 24h:\n\n- **Slowest:** `2e5db112e04639a1e71394d5557c5cb8` \u2014 797.4 ms\n- **Fastest:** `3f185804341eb70b9bc28a4e2282349a` \u2014 669.6 ms\n- **Extra time:** ~127.9 ms\n\nAggregating self-time by (service, operation) along each trace's critical path and diffing:\n\n| service / operation | fast (self, ms) | slow (self, ms) | \u0394 (ms) |\n|---|---|---|---|\n| **mysql / SQL SELECT** | 285.3 | 360.5 | **+75.2** |\n| redis-manual / GetDriver (\u00d7~12-13 calls) | 175.0 | 201.9 | +27.0 |\n| redis-manual / FindDriverIDs | 13.4 | 33.9 | +20.5 |\n| driver / FindNearest | 0.6 | 1.8 | +1.2 |\n| route / /route (\u00d74 calls) | 183.4 | 190.3 | +6.9 |\n| frontend / HTTP GET, /dispatch, FindNearest | ~11.2 | ~8.7 | -2.5 |\n\nThe single `mysql` `SQL SELECT` call (invoked once, inside the `customer` service's `/customer` lookup) alone accounts for **+75.2 ms**, roughly **59% of the total 127.9 ms gap** between the fastest and slowest trace \u2014 more than all the repeated Redis `GetDriver` calls combined.",
+      "ttft_ms": 3928,
+      "ttft_stream_ms": 1177,
+      "time_to_request_ms": 184,
+      "type": "result",
+      "duration_ms": 77837,
+      "uuid": "764f9739-771d-416a-b074-0558bece1ecd"
+    },
+    "success": true,
+    "error": null,
+    "budget_exhausted": false
+  }
+}

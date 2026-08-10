@@ -1,0 +1,82 @@
+{
+  "captured_at_unix": 1786303937,
+  "jaeger_url": "http://localhost:16686",
+  "ground_truth": {
+    "21_error_root_cause": {
+      "value": {
+        "service": "redis-manual",
+        "operation": "GetDriver"
+      },
+      "depth": 3,
+      "error_trace_count": 52,
+      "total_error_spans": 130,
+      "method": "deepest error span (max CHILD_OF ancestor depth) across all error traces of any hotrod service in the last 24 hours; ties broken by earliest trace start then earliest span start"
+    },
+    "22_critical_path": {
+      "value": {
+        "service": "mysql",
+        "operation": "SQL SELECT"
+      },
+      "self_time_us": 360512,
+      "trace_id": "2e5db112e04639a1e71394d5557c5cb8",
+      "trace_duration_us": 797434,
+      "method": "max total critical-path self-time by (service,operation) on the slowest trace of service=frontend in the last 24 hours"
+    },
+    "23_trace_shape": {
+      "value": {
+        "span_count": 40,
+        "services": [
+          "customer",
+          "driver",
+          "frontend",
+          "mysql",
+          "redis-manual",
+          "route"
+        ]
+      },
+      "trace_id": "2e5db112e04639a1e71394d5557c5cb8",
+      "trace_duration_us": 797434,
+      "method": "span count + service set of the slowest trace of service=driver in the last 24 hours"
+    },
+    "24_attribute_hunt": {
+      "value": "T744353C",
+      "attribute_key": "param.driverID",
+      "trace_id": "89e52103a97fd980c331260a8a0da4be",
+      "span_id": "f1e9e6fd012d107a",
+      "span_operation": "GetDriver",
+      "all_failing_ids": [
+        "T744353C",
+        "T712372C"
+      ],
+      "method": "tag 'param.driverID' on the earliest-starting failing span of the most recent error trace of service=driver in the last 24 hours"
+    },
+    "25_dependency": {
+      "value": {
+        "callers": [
+          "customer"
+        ],
+        "target_operation": "SQL SELECT"
+      },
+      "dependency_api_callers": [
+        "customer"
+      ],
+      "span_derived_callers": [
+        "customer"
+      ],
+      "agrees": true,
+      "method": "direct CHILD_OF callers of service=mysql observed in traces in the last 24 hours, cross-checked against /api/dependencies"
+    },
+    "26_compare_traces": {
+      "value": {
+        "service": "mysql",
+        "operation": "SQL SELECT"
+      },
+      "delta_us": 75201,
+      "fast_trace_id": "3f185804341eb70b9bc28a4e2282349a",
+      "slow_trace_id": "2e5db112e04639a1e71394d5557c5cb8",
+      "fast_trace_duration_us": 669553,
+      "slow_trace_duration_us": 797434,
+      "method": "largest positive delta in critical-path self-time by (service,operation) between the fastest and slowest trace of frontend//dispatch in the last 24 hours"
+    }
+  }
+}

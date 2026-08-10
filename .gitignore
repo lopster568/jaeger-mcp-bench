@@ -15,3 +15,15 @@ server/jaeger-mcp-bench-server
 *.snap
 .env
 .env.local
+
+# Arm 2 (docs/arm2-design.md) published runs - kept in-tree like b75f18cd
+!results/runs/c429fafa/
+!results/runs/214e85b2/
+!results/runs/arm2final/
+!results/runs/d78bb27b/
+!results/tables/c429fafa.csv
+!results/tables/c429fafa.md
+!results/tables/214e85b2.csv
+!results/tables/214e85b2.md
+!results/tables/arm2final.csv
+!results/tables/arm2final.md

@@ -1,0 +1,72 @@
+{
+  "run_id": "214e85b2",
+  "model": "gemini",
+  "format": "flat",
+  "task_id": "22_critical_path",
+  "trial": 0,
+  "ts_unix": 1786343426,
+  "result": {
+    "answer": "The service and operation with the most self-time in the slowest trace is:\n\n- **Service:** `mysql`\n- **Operation:** `SQL SELECT`",
+    "input_tokens": 935836,
+    "output_tokens": 45,
+    "cache_read_tokens": 622765,
+    "cache_creation_tokens": null,
+    "tool_calls": 1,
+    "duration_ms": 447340,
+    "raw_output": {
+      "response": "The service and operation with the most self-time in the slowest trace is:\n\n- **Service:** `mysql`\n- **Operation:** `SQL SELECT`",
+      "stats": {
+        "models": {
+          "gemini-2.5-pro": {
+            "api": {
+              "totalRequests": 4,
+              "totalErrors": 0,
+              "totalLatencyMs": 434176
+            },
+            "tokens": {
+              "prompt": 935836,
+              "candidates": 45,
+              "total": 951549,
+              "cached": 622765,
+              "thoughts": 15668,
+              "tool": 0
+            }
+          }
+        },
+        "tools": {
+          "totalCalls": 1,
+          "totalSuccess": 1,
+          "totalFail": 0,
+          "totalDurationMs": 184,
+          "totalDecisions": {
+            "accept": 0,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 1
+          },
+          "byName": {
+            "get_trace_data": {
+              "count": 1,
+              "success": 1,
+              "fail": 0,
+              "durationMs": 184,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 1
+              }
+            }
+          }
+        },
+        "files": {
+          "totalLinesAdded": 0,
+          "totalLinesRemoved": 0
+        }
+      }
+    },
+    "success": true,
+    "error": null,
+    "budget_exhausted": false
+  }
+}

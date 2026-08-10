@@ -1,0 +1,25 @@
+{
+  "run_id": "214e85b2",
+  "model": "gemini",
+  "format": "flat",
+  "task_id": "26_compare_traces",
+  "trial": 0,
+  "ts_unix": 1786342932,
+  "result": {
+    "answer": "",
+    "input_tokens": null,
+    "output_tokens": null,
+    "cache_read_tokens": null,
+    "cache_creation_tokens": null,
+    "tool_calls": 0,
+    "duration_ms": 12951,
+    "raw_output": {
+      "stderr": "YOLO mode is enabled. All tool calls will be automatically approved.\nLoaded cached credentials.\n{\n  \"error\": {\n    \"type\": \"GaxiosError\",\n    \"message\": \"request to https://cloudcode-pa.googleapis.com/v1internal:loadCodeAssist failed, reason: \",\n    \"code\": 1\n  }\n}\n",
+      "stdout": "",
+      "gemini_error": null
+    },
+    "success": false,
+    "error": "rc=1",
+    "budget_exhausted": false
+  }
+}

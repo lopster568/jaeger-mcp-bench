@@ -1,0 +1,243 @@
+{
+  "run_id": "d78bb27b",
+  "started_at_unix": 1786305176,
+  "seed": 42,
+  "shuffled": true,
+  "models": [
+    "claude"
+  ],
+  "formats": [
+    "tiered",
+    "flat"
+  ],
+  "trials_per_cell": 3,
+  "jaeger_url": "http://localhost:16686",
+  "flat_url": "http://localhost:8090/mcp",
+  "timeout_sec": 600,
+  "task_ids": [
+    "21_error_root_cause",
+    "22_critical_path",
+    "23_trace_shape",
+    "24_attribute_hunt",
+    "25_dependency",
+    "26_compare_traces"
+  ],
+  "cell_order": [
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "24_attribute_hunt",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "25_dependency",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "22_critical_path",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "24_attribute_hunt",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "25_dependency",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "21_error_root_cause",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "25_dependency",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "23_trace_shape",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "22_critical_path",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "23_trace_shape",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "25_dependency",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "24_attribute_hunt",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "24_attribute_hunt",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "24_attribute_hunt",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "23_trace_shape",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "21_error_root_cause",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "26_compare_traces",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "26_compare_traces",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "23_trace_shape",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "23_trace_shape",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "21_error_root_cause",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "26_compare_traces",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "25_dependency",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "21_error_root_cause",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "21_error_root_cause",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "26_compare_traces",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "24_attribute_hunt",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "22_critical_path",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "22_critical_path",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "flat",
+      "task_id": "22_critical_path",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "22_critical_path",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "25_dependency",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "26_compare_traces",
+      "trial": 0
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "26_compare_traces",
+      "trial": 2
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "21_error_root_cause",
+      "trial": 1
+    },
+    {
+      "model": "claude",
+      "format": "tiered",
+      "task_id": "23_trace_shape",
+      "trial": 1
+    }
+  ]
+}

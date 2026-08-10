@@ -1,0 +1,106 @@
+{
+  "run_id": "c429fafa",
+  "model": "claude",
+  "format": "flat",
+  "task_id": "24_attribute_hunt",
+  "trial": 1,
+  "ts_unix": 1786339564,
+  "result": {
+    "answer": "",
+    "input_tokens": 36,
+    "output_tokens": 7005,
+    "cache_read_tokens": 803588,
+    "cache_creation_tokens": 19775,
+    "tool_calls": 9,
+    "duration_ms": 116362,
+    "raw_output": {
+      "is_error": true,
+      "duration_api_ms": 99245,
+      "num_turns": 20,
+      "stop_reason": "tool_use",
+      "session_id": "b387ff80-71ec-4661-9923-fe2e4edd8f89",
+      "total_cost_usd": 0.5054547,
+      "usage": {
+        "input_tokens": 36,
+        "cache_creation_input_tokens": 19775,
+        "cache_read_input_tokens": 803588,
+        "output_tokens": 7005,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 19775,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 1178,
+            "cache_read_input_tokens": 51718,
+            "cache_creation_input_tokens": 813,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 813
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-5": {
+          "inputTokens": 38,
+          "outputTokens": 7879,
+          "cacheReadInputTokens": 856119,
+          "cacheCreationInputTokens": 21720,
+          "webSearchRequests": 0,
+          "costUSD": 0.5054547,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 64000,
+          "canonicalModel": "claude-sonnet-5",
+          "provider": "firstParty"
+        }
+      },
+      "permission_denials": [
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01FPgHYUvpTuSNZsietY1FuR",
+          "tool_input": {
+            "command": "wc -l /home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/b387ff80-71ec-4661-9923-fe2e4edd8f89/tool-results/mcp-jaeger-bench-get_trace_data-1786339465865.txt; python3 -c \"\nimport json\nwith open('/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/b387ff80-71ec-4661-9923-fe2e4edd8f89/tool-results/mcp-jaeger-bench-get_trace_data-1786339465865.txt') as f:\n    data = json.load(f)\nprint(type(data), data.get('total'), data.get('limit'), data.get('offset'))\nprint(len(data.get('data',[])))\n\"\n"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01HBtTy8d1Ld36p2YmHPReG8",
+          "tool_input": {
+            "command": "python3 -c \"\nimport json\nwith open('/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/b387ff80-71ec-4661-9923-fe2e4edd8f89/tool-results/mcp-jaeger-bench-get_trace_data-1786339465865.txt') as f:\n    data = json.load(f)\nprint(type(data), data.get('total'), data.get('limit'), data.get('offset'))\nprint(len(data.get('data',[])))\n\"\n"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_015y1DAVU3cTigGYHjUjqyFG",
+          "tool_input": {
+            "command": "python3 -c \"\nimport json\nwith open('/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/b387ff80-71ec-4661-9923-fe2e4edd8f89/tool-results/mcp-jaeger-bench-get_trace_data-1786339465865.txt') as f:\n    data = json.load(f)\nprint(type(data), data.get('total'), data.get('limit'), data.get('offset'))\nprint(len(data.get('data',[])))\n\"\n",
+            "dangerouslyDisableSandbox": true
+          }
+        }
+      ],
+      "terminal_reason": "budget_exhausted",
+      "fast_mode_state": "off",
+      "fast_mode_disabled_reason": "sdk_opt_in_required",
+      "subtype": "error_max_budget_usd",
+      "errors": [
+        "Reached maximum budget ($0.5)"
+      ],
+      "type": "result",
+      "duration_ms": 113251,
+      "uuid": "2989dbf7-95cd-4092-864a-95134b584b5d"
+    },
+    "success": true,
+    "error": "error_max_budget_usd",
+    "budget_exhausted": true
+  }
+}

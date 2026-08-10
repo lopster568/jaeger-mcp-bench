@@ -1,0 +1,21 @@
+{
+  "run_id": "214e85b2",
+  "model": "gemini",
+  "format": "flat",
+  "task_id": "22_critical_path",
+  "trial": 2,
+  "ts_unix": 1786344061,
+  "result": {
+    "answer": "",
+    "input_tokens": null,
+    "output_tokens": null,
+    "cache_read_tokens": null,
+    "cache_creation_tokens": null,
+    "tool_calls": 0,
+    "duration_ms": 600000,
+    "raw_output": {},
+    "success": false,
+    "error": "timeout",
+    "budget_exhausted": false
+  }
+}

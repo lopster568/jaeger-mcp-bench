@@ -1,0 +1,84 @@
+{
+  "run_id": "214e85b2",
+  "model": "gemini",
+  "format": "tiered",
+  "task_id": "22_critical_path",
+  "trial": 2,
+  "ts_unix": 1786339704,
+  "result": {
+    "answer": "The operation with the most self-time is in the `mysql` service, and the operation name is `SQL SELECT`.",
+    "input_tokens": 37605,
+    "output_tokens": 124,
+    "cache_read_tokens": 22950,
+    "cache_creation_tokens": null,
+    "tool_calls": 4,
+    "duration_ms": 45456,
+    "raw_output": {
+      "response": "The operation with the most self-time is in the `mysql` service, and the operation name is `SQL SELECT`.",
+      "stats": {
+        "models": {
+          "gemini-2.5-pro": {
+            "api": {
+              "totalRequests": 5,
+              "totalErrors": 0,
+              "totalLatencyMs": 30262
+            },
+            "tokens": {
+              "prompt": 37605,
+              "candidates": 124,
+              "total": 39812,
+              "cached": 22950,
+              "thoughts": 2083,
+              "tool": 0
+            }
+          }
+        },
+        "tools": {
+          "totalCalls": 4,
+          "totalSuccess": 3,
+          "totalFail": 1,
+          "totalDurationMs": 1630,
+          "totalDecisions": {
+            "accept": 0,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 3
+          },
+          "byName": {
+            "search_traces": {
+              "count": 3,
+              "success": 2,
+              "fail": 1,
+              "durationMs": 43,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 2
+              }
+            },
+            "get_critical_path": {
+              "count": 1,
+              "success": 1,
+              "fail": 0,
+              "durationMs": 1587,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 1
+              }
+            }
+          }
+        },
+        "files": {
+          "totalLinesAdded": 0,
+          "totalLinesRemoved": 0
+        }
+      }
+    },
+    "success": true,
+    "error": null,
+    "budget_exhausted": false
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "run_id": "214e85b2",
+  "model": "gemini",
+  "format": "flat",
+  "task_id": "25_dependency",
+  "trial": 0,
+  "ts_unix": 1786340050,
+  "result": {
+    "answer": "The direct caller of the mysql service is the `customer` service.\nThe operation name on the mysql spans is `SQL SELECT`.",
+    "input_tokens": 389530,
+    "output_tokens": 39,
+    "cache_read_tokens": 382245,
+    "cache_creation_tokens": null,
+    "tool_calls": 1,
+    "duration_ms": 56175,
+    "raw_output": {
+      "response": "The direct caller of the mysql service is the `customer` service.\nThe operation name on the mysql spans is `SQL SELECT`.",
+      "stats": {
+        "models": {
+          "gemini-2.5-pro": {
+            "api": {
+              "totalRequests": 2,
+              "totalErrors": 0,
+              "totalLatencyMs": 41073
+            },
+            "tokens": {
+              "prompt": 389530,
+              "candidates": 39,
+              "total": 390564,
+              "cached": 382245,
+              "thoughts": 995,
+              "tool": 0
+            }
+          }
+        },
+        "tools": {
+          "totalCalls": 1,
+          "totalSuccess": 1,
+          "totalFail": 0,
+          "totalDurationMs": 177,
+          "totalDecisions": {
+            "accept": 0,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 1
+          },
+          "byName": {
+            "get_trace_data": {
+              "count": 1,
+              "success": 1,
+              "fail": 0,
+              "durationMs": 177,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 1
+              }
+            }
+          }
+        },
+        "files": {
+          "totalLinesAdded": 0,
+          "totalLinesRemoved": 0
+        }
+      }
+    },
+    "success": true,
+    "error": null,
+    "budget_exhausted": false
+  }
+}

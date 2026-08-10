@@ -1,0 +1,116 @@
+{
+  "run_id": "c429fafa",
+  "model": "claude",
+  "format": "flat",
+  "task_id": "22_critical_path",
+  "trial": 1,
+  "ts_unix": 1786339116,
+  "result": {
+    "answer": "",
+    "input_tokens": 28,
+    "output_tokens": 6961,
+    "cache_read_tokens": 591394,
+    "cache_creation_tokens": 31996,
+    "tool_calls": 7,
+    "duration_ms": 123610,
+    "raw_output": {
+      "is_error": true,
+      "duration_api_ms": 100737,
+      "num_turns": 15,
+      "stop_reason": "end_turn",
+      "session_id": "218d9187-109e-4b92-8c9f-7e88dc395da0",
+      "total_cost_usd": 0.5068122,
+      "usage": {
+        "input_tokens": 28,
+        "cache_creation_input_tokens": 31996,
+        "cache_read_input_tokens": 591394,
+        "output_tokens": 6961,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 31996,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 717,
+            "cache_read_input_tokens": 57123,
+            "cache_creation_input_tokens": 3237,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 3237
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-5": {
+          "inputTokens": 30,
+          "outputTokens": 7636,
+          "cacheReadInputTokens": 651754,
+          "cacheCreationInputTokens": 32776,
+          "webSearchRequests": 0,
+          "costUSD": 0.5068122,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 64000,
+          "canonicalModel": "claude-sonnet-5",
+          "provider": "firstParty"
+        }
+      },
+      "permission_denials": [
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_017K5y2Z3Mb1Mr7PpZuWzvK2",
+          "tool_input": {
+            "command": "f=/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/218d9187-109e-4b92-8c9f-7e88dc395da0/tool-results/mcp-jaeger-bench-get_trace_data-1786339019845.txt\nwc -c \"$f\"\nhead -c 2000 \"$f\""
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01CSAUfnwemjoySHbFJ4K8e7",
+          "tool_input": {
+            "command": "f=\"/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/218d9187-109e-4b92-8c9f-7e88dc395da0/tool-results/mcp-jaeger-bench-get_trace_data-1786339019845.txt\"; wc -c \"$f\"",
+            "description": "Check file size"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01L1vproFKezhhpzqBMdRoEx",
+          "tool_input": {
+            "command": "f=\"/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/218d9187-109e-4b92-8c9f-7e88dc395da0/tool-results/mcp-jaeger-bench-get_trace_data-1786339019845.txt\"; wc -c \"$f\"",
+            "description": "Check size of saved trace data file"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01DxVjDZ8pLbFJAa8qGUGxwJ",
+          "tool_input": {
+            "command": "f=\"/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/218d9187-109e-4b92-8c9f-7e88dc395da0/tool-results/mcp-jaeger-bench-get_trace_data-1786339019845.txt\"; wc -c \"$f\"",
+            "description": "Check size of saved trace data file",
+            "dangerouslyDisableSandbox": true
+          }
+        }
+      ],
+      "terminal_reason": "budget_exhausted",
+      "fast_mode_state": "off",
+      "fast_mode_disabled_reason": "sdk_opt_in_required",
+      "subtype": "error_max_budget_usd",
+      "errors": [
+        "Reached maximum budget ($0.5)"
+      ],
+      "type": "result",
+      "duration_ms": 116461,
+      "uuid": "a0410152-ddb2-4224-9aea-50281205f345"
+    },
+    "success": true,
+    "error": "error_max_budget_usd",
+    "budget_exhausted": true
+  }
+}

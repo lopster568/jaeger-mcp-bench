@@ -1,0 +1,85 @@
+{
+  "run_id": "c429fafa",
+  "model": "claude",
+  "format": "tiered",
+  "task_id": "25_dependency",
+  "trial": 1,
+  "ts_unix": 1786340474,
+  "result": {
+    "answer": "This confirms the pattern: `customer` calls `mysql` directly (span `f961c8a31ac69f04`, child of the `/customer` span), with span name `SQL SELECT`.\n\n**Answer:**\n\n- **Direct caller of mysql:** `customer` (only service that calls mysql directly, per the service dependency graph \u2014 52 calls in the last 24h)\n- **Operation/span name on mysql spans:** `SQL SELECT`\n\nVerified against a real trace (`89e52103a97fd980c331260a8a0da4be`, 2026-08-09T19:30:51Z): `frontend \u2192 customer (/customer) \u2192 mysql (SQL SELECT)`.",
+    "input_tokens": 10,
+    "output_tokens": 935,
+    "cache_read_tokens": 169972,
+    "cache_creation_tokens": 11140,
+    "tool_calls": 2,
+    "duration_ms": 18243,
+    "raw_output": {
+      "is_error": false,
+      "duration_api_ms": 14694,
+      "num_turns": 6,
+      "stop_reason": "end_turn",
+      "session_id": "4c5ab181-3a11-4419-b919-e67dcc536108",
+      "total_cost_usd": 0.1318866,
+      "usage": {
+        "input_tokens": 10,
+        "cache_creation_input_tokens": 11140,
+        "cache_read_input_tokens": 169972,
+        "output_tokens": 935,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 11140,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 222,
+            "cache_read_input_tokens": 37463,
+            "cache_creation_input_tokens": 2041,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 2041
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-5": {
+          "inputTokens": 10,
+          "outputTokens": 935,
+          "cacheReadInputTokens": 169972,
+          "cacheCreationInputTokens": 11140,
+          "webSearchRequests": 0,
+          "costUSD": 0.1318866,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 64000,
+          "canonicalModel": "claude-sonnet-5",
+          "provider": "firstParty"
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "fast_mode_disabled_reason": "sdk_opt_in_required",
+      "subtype": "success",
+      "api_error_status": null,
+      "result": "This confirms the pattern: `customer` calls `mysql` directly (span `f961c8a31ac69f04`, child of the `/customer` span), with span name `SQL SELECT`.\n\n**Answer:**\n\n- **Direct caller of mysql:** `customer` (only service that calls mysql directly, per the service dependency graph \u2014 52 calls in the last 24h)\n- **Operation/span name on mysql spans:** `SQL SELECT`\n\nVerified against a real trace (`89e52103a97fd980c331260a8a0da4be`, 2026-08-09T19:30:51Z): `frontend \u2192 customer (/customer) \u2192 mysql (SQL SELECT)`.",
+      "ttft_ms": 1799,
+      "ttft_stream_ms": 1314,
+      "time_to_request_ms": 298,
+      "type": "result",
+      "duration_ms": 15095,
+      "uuid": "a3838066-f7aa-4c5f-8491-633c408b1495"
+    },
+    "success": true,
+    "error": null,
+    "budget_exhausted": false
+  }
+}

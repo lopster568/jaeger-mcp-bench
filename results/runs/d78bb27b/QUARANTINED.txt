@@ -1,0 +1,1 @@
+CONTAMINATED: 18/36 trials hit a network outage recorded as clean answers (see commit 5c5753a). Superseded by the re-run; kept for the writeup's methods section.

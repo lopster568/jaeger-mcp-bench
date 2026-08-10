@@ -1,0 +1,83 @@
+{
+  "run_id": "c429fafa",
+  "model": "claude",
+  "format": "tiered",
+  "task_id": "23_trace_shape",
+  "trial": 0,
+  "ts_unix": 1786340133,
+  "result": {
+    "answer": "",
+    "input_tokens": 28,
+    "output_tokens": 4977,
+    "cache_read_tokens": 646471,
+    "cache_creation_tokens": 31560,
+    "tool_calls": 7,
+    "duration_ms": 88746,
+    "raw_output": {
+      "is_error": true,
+      "duration_api_ms": 70183,
+      "num_turns": 15,
+      "stop_reason": "end_turn",
+      "session_id": "2bf86b3a-5759-45bd-985b-27f80b155990",
+      "total_cost_usd": 0.5098425000000001,
+      "usage": {
+        "input_tokens": 28,
+        "cache_creation_input_tokens": 31560,
+        "cache_read_input_tokens": 646471,
+        "output_tokens": 4977,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 31560,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 629,
+            "cache_read_input_tokens": 61960,
+            "cache_creation_input_tokens": 2654,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 2654
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-5": {
+          "inputTokens": 30,
+          "outputTokens": 6079,
+          "cacheReadInputTokens": 711085,
+          "cacheCreationInputTokens": 34207,
+          "webSearchRequests": 0,
+          "costUSD": 0.5098425000000001,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 64000,
+          "canonicalModel": "claude-sonnet-5",
+          "provider": "firstParty"
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "budget_exhausted",
+      "fast_mode_state": "off",
+      "fast_mode_disabled_reason": "sdk_opt_in_required",
+      "subtype": "error_max_budget_usd",
+      "errors": [
+        "Reached maximum budget ($0.5)"
+      ],
+      "type": "result",
+      "duration_ms": 85165,
+      "uuid": "25f37bfb-6994-4463-a247-412a35b1a809"
+    },
+    "success": true,
+    "error": "error_max_budget_usd",
+    "budget_exhausted": true
+  }
+}

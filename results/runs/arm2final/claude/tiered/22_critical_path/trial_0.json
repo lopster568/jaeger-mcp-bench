@@ -1,0 +1,85 @@
+{
+  "run_id": "c429fafa",
+  "model": "claude",
+  "format": "tiered",
+  "task_id": "22_critical_path",
+  "trial": 0,
+  "ts_unix": 1786341819,
+  "result": {
+    "answer": "**Slowest frontend trace (last 24h):** `2e5db112e04639a1e71394d5557c5cb8` \u2014 797.4 ms total duration (root `/dispatch`, 40 spans across frontend/customer/driver/route/mysql/redis-manual).\n\n**Operation with the most self time:** `mysql` \u2014 **`SQL SELECT`** (span `593af867a29f2061`, under the `customer` service's `/customer` call).\n\n- Self time: **360,512 \u00b5s (~360.5 ms)** \u2014 about **45%** of the entire trace duration.\n- This single span dwarfs everything else on the critical path \u2014 the next largest contributors are `route` service `/route` calls (~57\u201380 ms self time each) and the many `redis-manual` `GetDriver` lookups (a few ms to ~33 ms each, ~202 ms combined across all instances). No other single span or aggregated operation comes close to the mysql SELECT's self time.\n\nSo the bottleneck in this slowest trace is a single, unindexed-looking MySQL query in the `customer` service's request path \u2014 it alone accounts for nearly half the total trace latency.",
+    "input_tokens": 14,
+    "output_tokens": 3454,
+    "cache_read_tokens": 244345,
+    "cache_creation_tokens": 13627,
+    "tool_calls": 3,
+    "duration_ms": 56060,
+    "raw_output": {
+      "is_error": false,
+      "duration_api_ms": 52887,
+      "num_turns": 7,
+      "stop_reason": "end_turn",
+      "session_id": "19b1174e-0acd-46ac-8d57-bed5af629ade",
+      "total_cost_usd": 0.2069175,
+      "usage": {
+        "input_tokens": 14,
+        "cache_creation_input_tokens": 13627,
+        "cache_read_input_tokens": 244345,
+        "output_tokens": 3454,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 13627,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 2152,
+            "cache_read_input_tokens": 38102,
+            "cache_creation_input_tokens": 3889,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 3889
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-5": {
+          "inputTokens": 14,
+          "outputTokens": 3454,
+          "cacheReadInputTokens": 244345,
+          "cacheCreationInputTokens": 13627,
+          "webSearchRequests": 0,
+          "costUSD": 0.2069175,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 64000,
+          "canonicalModel": "claude-sonnet-5",
+          "provider": "firstParty"
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "fast_mode_disabled_reason": "sdk_opt_in_required",
+      "subtype": "success",
+      "api_error_status": null,
+      "result": "**Slowest frontend trace (last 24h):** `2e5db112e04639a1e71394d5557c5cb8` \u2014 797.4 ms total duration (root `/dispatch`, 40 spans across frontend/customer/driver/route/mysql/redis-manual).\n\n**Operation with the most self time:** `mysql` \u2014 **`SQL SELECT`** (span `593af867a29f2061`, under the `customer` service's `/customer` call).\n\n- Self time: **360,512 \u00b5s (~360.5 ms)** \u2014 about **45%** of the entire trace duration.\n- This single span dwarfs everything else on the critical path \u2014 the next largest contributors are `route` service `/route` calls (~57\u201380 ms self time each) and the many `redis-manual` `GetDriver` lookups (a few ms to ~33 ms each, ~202 ms combined across all instances). No other single span or aggregated operation comes close to the mysql SELECT's self time.\n\nSo the bottleneck in this slowest trace is a single, unindexed-looking MySQL query in the `customer` service's request path \u2014 it alone accounts for nearly half the total trace latency.",
+      "ttft_ms": 4012,
+      "ttft_stream_ms": 2354,
+      "time_to_request_ms": 169,
+      "type": "result",
+      "duration_ms": 53254,
+      "uuid": "8fc354ac-d252-4a47-84df-b17c6bd610a6"
+    },
+    "success": true,
+    "error": null,
+    "budget_exhausted": false
+  }
+}

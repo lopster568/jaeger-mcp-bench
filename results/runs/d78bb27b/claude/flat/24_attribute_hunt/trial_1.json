@@ -1,0 +1,127 @@
+{
+  "run_id": "d78bb27b",
+  "model": "claude",
+  "format": "flat",
+  "task_id": "24_attribute_hunt",
+  "trial": 1,
+  "ts_unix": 1786306424,
+  "result": {
+    "answer": "",
+    "input_tokens": 46,
+    "output_tokens": 7529,
+    "cache_read_tokens": 929187,
+    "cache_creation_tokens": 16633,
+    "tool_calls": 11,
+    "duration_ms": 115209,
+    "raw_output": {
+      "is_error": true,
+      "duration_api_ms": 104796,
+      "num_turns": 24,
+      "stop_reason": "tool_use",
+      "session_id": "6f21e301-9c8b-4157-8532-f1ea2aa0cfb4",
+      "total_cost_usd": 0.5147751,
+      "usage": {
+        "input_tokens": 46,
+        "cache_creation_input_tokens": 16633,
+        "cache_read_input_tokens": 929187,
+        "output_tokens": 7529,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 16633,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 163,
+            "cache_read_input_tokens": 48664,
+            "cache_creation_input_tokens": 726,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 726
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-5": {
+          "inputTokens": 48,
+          "outputTokens": 7982,
+          "cacheReadInputTokens": 978577,
+          "cacheCreationInputTokens": 16888,
+          "webSearchRequests": 0,
+          "costUSD": 0.5147751,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 64000,
+          "canonicalModel": "claude-sonnet-5",
+          "provider": "firstParty"
+        }
+      },
+      "permission_denials": [
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_013rjQ6t8K5HZubFi4Qt9YrD",
+          "tool_input": {
+            "command": "python3 -c \"\nimport json\nwith open('/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/6f21e301-9c8b-4157-8532-f1ea2aa0cfb4/tool-results/mcp-jaeger-bench-get_trace_data-1786306328980.txt') as f:\n    data = json.load(f)\nprint(type(data), list(data.keys()) if isinstance(data, dict) else len(data))\nprint(json.dumps(data, indent=2)[:2000])\n\"\n"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01VWd16iGwm1cuJKkKrVTcFX",
+          "tool_input": {
+            "command": "python3 -c \"\nimport json\nwith open('/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/6f21e301-9c8b-4157-8532-f1ea2aa0cfb4/tool-results/mcp-jaeger-bench-get_trace_data-1786306328980.txt') as f:\n    data = json.load(f)\nprint(type(data), list(data.keys()) if isinstance(data, dict) else len(data))\nprint(json.dumps(data, indent=2)[:2000])\n\"\n",
+            "dangerouslyDisableSandbox": true
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_014btx4J7reyszcxixV6Qsd8",
+          "tool_input": {
+            "command": "python3 -c \"\nimport json\nwith open('/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/6f21e301-9c8b-4157-8532-f1ea2aa0cfb4/tool-results/mcp-jaeger-bench-get_trace_data-1786306328980.txt') as f:\n    data = json.load(f)\nprint(type(data), list(data.keys()) if isinstance(data, dict) else len(data))\n\"\n"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01PVQAiRpSwdpKW8PBSCEk4R",
+          "tool_input": {
+            "command": "F=/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/6f21e301-9c8b-4157-8532-f1ea2aa0cfb4/tool-results/mcp-jaeger-bench-get_trace_data-1786306328980.txt\njq '.data[0].spans[0].tags' $F\necho \"---processes---\"\njq '.data[0].processes' $F"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_013AoFjUdqdNDCbfBmizZBCC",
+          "tool_input": {
+            "command": "F=/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/6f21e301-9c8b-4157-8532-f1ea2aa0cfb4/tool-results/mcp-jaeger-bench-get_trace_data-1786306328980.txt\njq '.data[0].spans[0].tags' $F"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01XL4fVa7CwSM4p2VLKprFsA",
+          "tool_input": {
+            "command": "F=/home/oni/.claude/projects/-home-oni-jaeger-mcp-bench-harness/6f21e301-9c8b-4157-8532-f1ea2aa0cfb4/tool-results/mcp-jaeger-bench-get_trace_data-1786306392564.txt\njq '{total, limit, offset, errors}' $F\npython3 - <<'EOF' 2>/dev/null || true\nEOF\ndate -d @1786303851 -u 2>/dev/null || echo \"no date util maybe\"\ndate -d @1786303851"
+          }
+        }
+      ],
+      "terminal_reason": "budget_exhausted",
+      "fast_mode_state": "off",
+      "fast_mode_disabled_reason": "sdk_opt_in_required",
+      "subtype": "error_max_budget_usd",
+      "errors": [
+        "Reached maximum budget ($0.5)"
+      ],
+      "type": "result",
+      "duration_ms": 112844,
+      "uuid": "1078162c-f0d0-4d3b-bdc1-8e2db0d61b22"
+    },
+    "success": true,
+    "error": "error_max_budget_usd",
+    "budget_exhausted": true
+  }
+}

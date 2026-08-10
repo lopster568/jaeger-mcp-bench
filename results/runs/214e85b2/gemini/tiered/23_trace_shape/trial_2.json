@@ -1,0 +1,72 @@
+{
+  "run_id": "214e85b2",
+  "model": "gemini",
+  "format": "tiered",
+  "task_id": "23_trace_shape",
+  "trial": 2,
+  "ts_unix": 1786341010,
+  "result": {
+    "answer": "The slowest trace involving the `driver` service in the last 24 hours is `5259e1694f9b2b2b2247db75d922924f`.\n\nThat trace contains 40 spans in total.\n\nThe services that participated in that trace are:\n* `customer`\n* `driver`\n* `frontend`\n* `mysql`\n* `redis-manual`\n* `route`",
+    "input_tokens": 19833,
+    "output_tokens": 142,
+    "cache_read_tokens": 15868,
+    "cache_creation_tokens": null,
+    "tool_calls": 2,
+    "duration_ms": 36152,
+    "raw_output": {
+      "response": "The slowest trace involving the `driver` service in the last 24 hours is `5259e1694f9b2b2b2247db75d922924f`.\n\nThat trace contains 40 spans in total.\n\nThe services that participated in that trace are:\n* `customer`\n* `driver`\n* `frontend`\n* `mysql`\n* `redis-manual`\n* `route`",
+      "stats": {
+        "models": {
+          "gemini-2.5-pro": {
+            "api": {
+              "totalRequests": 3,
+              "totalErrors": 0,
+              "totalLatencyMs": 19175
+            },
+            "tokens": {
+              "prompt": 19833,
+              "candidates": 142,
+              "total": 21155,
+              "cached": 15868,
+              "thoughts": 1180,
+              "tool": 0
+            }
+          }
+        },
+        "tools": {
+          "totalCalls": 2,
+          "totalSuccess": 1,
+          "totalFail": 1,
+          "totalDurationMs": 43,
+          "totalDecisions": {
+            "accept": 0,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 1
+          },
+          "byName": {
+            "search_traces": {
+              "count": 2,
+              "success": 1,
+              "fail": 1,
+              "durationMs": 43,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 1
+              }
+            }
+          }
+        },
+        "files": {
+          "totalLinesAdded": 0,
+          "totalLinesRemoved": 0
+        }
+      }
+    },
+    "success": true,
+    "error": null,
+    "budget_exhausted": false
+  }
+}

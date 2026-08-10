@@ -1,0 +1,42 @@
+model,format,task_id,n_trials,correct,incorrect,non_answer,pass_pow_n,pass_at_n,mean_input_tokens,mean_output_tokens,mean_cache_creation,mean_cache_read,mean_tool_calls,mean_duration_ms,sample_correct,sample_incorrect,n_unscorable,n_budget_exhausted,n_timeout,n_infra_error
+claude,flat,21_error_root_cause,3,2,1,0,0.667,1,30,7018.3,26738.3,639218.3,9.33,119789,"## Findings
+
+Across all 6 hotrod services over the last 24 hours, only **redis-manual** reported any error-status spans — `frontend`, `customer`, `driver`, `route`, and `mysql` all returned zero error",no answer text :: ,0,1,0,0
+claude,flat,22_critical_path,3,0,3,0,0.0,0,34,7744.3,23708.3,701460.3,8.67,149691,,no answer text :: ,0,3,0,0
+claude,flat,23_trace_shape,3,2,1,0,0.667,1,24,4086.7,10219.7,489962.7,6,271849,"Confirmed. Here's the result:
+
+**Slowest driver-service trace in the last 24h:**
+- **Trace ID:** `2e5db112e04639a1e71394d5557c5cb8`
+- **Total duration:** 797,434 µs (~0.797 s)
+- **Total spans:** 40
+- ",no answer text :: ,0,0,1,0
+claude,flat,24_attribute_hunt,3,0,3,0,0.0,0,36.7,7520.7,19067.3,743131,9,293306,,no answer text :: ,0,2,0,0
+claude,flat,25_dependency,3,2,1,0,0.667,1,22,3502.3,8286.7,423574.7,5,309469,"Based on 20 traces from the last 24 hours (`mysql` service, 1440-minute lookback):
+
+**Direct caller of `mysql`:** only the **`customer`** service — every mysql span's parent is a span in `customer` (o",no answer text :: ,0,0,1,0
+claude,flat,26_compare_traces,3,0,3,0,0.0,0,36,8659.3,13871.7,687180.7,8.67,176353,,no answer text :: ,0,3,0,0
+claude,tiered,21_error_root_cause,3,3,0,0,1.0,1,16.7,4132.7,15728.3,306906.3,6.67,57495,"## Findings
+
+Across the error-flagged traces from the last 24h (all under the `frontend /dispatch` root, e.g. `89e52103a97fd980c331260a8a0da4be`, `5259e1694f9b2b2b2247db75d922924f`), the error pattern",,0,0,0,0
+claude,tiered,22_critical_path,3,3,0,0,1.0,1,16,4121.7,16269.3,294369.3,3.33,67309,"## Answer
+
+**Slowest frontend trace (last 24h):** `2e5db112e04639a1e71394d5557c5cb8` — total duration **797,434 µs (~797 ms)**, started 2026-08-09T19:30:24Z (root: `frontend /dispatch`).
+
+**Operation ",,0,0,0,0
+claude,tiered,23_trace_shape,3,1,2,0,0.333,1,30.7,7599,24310,654806.7,7.33,121555,"## Slowest driver-service trace in the last 24h
+
+All `driver` traces in the lookback window are clustered in a ~90-second burst on 2026-08-09 (19:29:24–19:30:51 UTC) — 50 traces total, no others found",no answer text :: ,0,2,0,0
+claude,tiered,24_attribute_hunt,3,3,0,0,1.0,1,20.7,3000.3,20478.3,363650.3,4.67,55005,"The most recent trace of the `driver` service (in the last 24h) containing failing spans is `89e52103a97fd980c331260a8a0da4be` (started 2026-08-09T19:30:51Z, root `/dispatch`).
+
+It has 2 error spans, ",,0,0,0,0
+claude,tiered,25_dependency,3,3,0,0,1.0,1,10,1045.3,9776,171778.7,2.67,21064,"This confirms the pattern: `customer` calls `mysql` directly (span `f961c8a31ac69f04`, child of the `/customer` span), with span name `SQL SELECT`.
+
+**Answer:**
+
+- **Direct caller of mysql:** `custome",,0,0,0,0
+claude,tiered,26_compare_traces,3,3,0,0,1.0,1,17.3,6706.7,26956,349138,5.33,78162,"**Answer: `mysql` / `SQL SELECT`**
+
+Comparing the fastest and slowest `/dispatch` traces from the last 24h:
+
+- **Slowest:** `2e5db112e04639a1e71394d5557c5cb8` — 797.4 ms
+- **Fastest:** `3f185804341eb7",,0,0,0,0

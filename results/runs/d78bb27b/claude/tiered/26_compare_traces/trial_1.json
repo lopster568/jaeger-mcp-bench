@@ -1,0 +1,85 @@
+{
+  "run_id": "d78bb27b",
+  "model": "claude",
+  "format": "tiered",
+  "task_id": "26_compare_traces",
+  "trial": 1,
+  "ts_unix": 1786306677,
+  "result": {
+    "answer": "## Answer\n\n**Service: `mysql`, Operation: `SQL SELECT`**\n\nComparing the fastest (669.6ms, trace `3f185804...`) and slowest (797.4ms, trace `2e5db112...`) `/dispatch` traces from the frontend service:\n\n| Operation (service / span) | Fast trace self-time | Slow trace self-time | \u0394 (extra time) |\n|---|---|---|---|\n| **mysql / SQL SELECT** | 285,311\u00b5s | 360,512\u00b5s | **+75,201\u00b5s** |\n| redis-manual / GetDriver (aggregate) | 174,985\u00b5s | 201,946\u00b5s | +26,961\u00b5s |\n| redis-manual / FindDriverIDs | 13,428\u00b5s | 33,903\u00b5s | +20,475\u00b5s |\n| route / /route (aggregate) | 183,435\u00b5s | 190,292\u00b5s | +6,857\u00b5s |\n| (all other spans) | \u2014 | \u2014 | roughly flat/negative |\n\nTotal extra time in the slow trace vs. fast: ~127.9ms. The single `mysql SQL SELECT` span (invoked once per trace, inside the `customer` service's `/customer` call) alone accounts for **~75.2ms of that gap \u2014 about 59% of the total slowdown**, making it by far the largest single contributor. This far outweighs the cumulative effect of the many repeated `redis-manual GetDriver` calls in the driver-lookup loop, even though those add up to a larger *count* of spans.",
+    "input_tokens": 8,
+    "output_tokens": 4979,
+    "cache_read_tokens": 137892,
+    "cache_creation_tokens": 22082,
+    "tool_calls": 2,
+    "duration_ms": 56846,
+    "raw_output": {
+      "is_error": false,
+      "duration_api_ms": 55206,
+      "num_turns": 5,
+      "stop_reason": "end_turn",
+      "session_id": "1e8dcf35-7ccd-431e-9431-f52bba3900eb",
+      "total_cost_usd": 0.2485686,
+      "usage": {
+        "input_tokens": 8,
+        "cache_creation_input_tokens": 22082,
+        "cache_read_input_tokens": 137892,
+        "output_tokens": 4979,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 22082,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 3035,
+            "cache_read_input_tokens": 41721,
+            "cache_creation_input_tokens": 8725,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 8725
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-5": {
+          "inputTokens": 8,
+          "outputTokens": 4979,
+          "cacheReadInputTokens": 137892,
+          "cacheCreationInputTokens": 22082,
+          "webSearchRequests": 0,
+          "costUSD": 0.2485686,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 64000,
+          "canonicalModel": "claude-sonnet-5",
+          "provider": "firstParty"
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "fast_mode_disabled_reason": "sdk_opt_in_required",
+      "subtype": "success",
+      "api_error_status": null,
+      "result": "## Answer\n\n**Service: `mysql`, Operation: `SQL SELECT`**\n\nComparing the fastest (669.6ms, trace `3f185804...`) and slowest (797.4ms, trace `2e5db112...`) `/dispatch` traces from the frontend service:\n\n| Operation (service / span) | Fast trace self-time | Slow trace self-time | \u0394 (extra time) |\n|---|---|---|---|\n| **mysql / SQL SELECT** | 285,311\u00b5s | 360,512\u00b5s | **+75,201\u00b5s** |\n| redis-manual / GetDriver (aggregate) | 174,985\u00b5s | 201,946\u00b5s | +26,961\u00b5s |\n| redis-manual / FindDriverIDs | 13,428\u00b5s | 33,903\u00b5s | +20,475\u00b5s |\n| route / /route (aggregate) | 183,435\u00b5s | 190,292\u00b5s | +6,857\u00b5s |\n| (all other spans) | \u2014 | \u2014 | roughly flat/negative |\n\nTotal extra time in the slow trace vs. fast: ~127.9ms. The single `mysql SQL SELECT` span (invoked once per trace, inside the `customer` service's `/customer` call) alone accounts for **~75.2ms of that gap \u2014 about 59% of the total slowdown**, making it by far the largest single contributor. This far outweighs the cumulative effect of the many repeated `redis-manual GetDriver` calls in the driver-lookup loop, even though those add up to a larger *count* of spans.",
+      "ttft_ms": 2158,
+      "ttft_stream_ms": 1033,
+      "time_to_request_ms": 68,
+      "type": "result",
+      "duration_ms": 55301,
+      "uuid": "a3bb015f-edf2-425a-9b62-ce25c3b03622"
+    },
+    "success": true,
+    "error": null,
+    "budget_exhausted": false
+  }
+}

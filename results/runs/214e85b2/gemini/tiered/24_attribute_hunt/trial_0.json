@@ -1,0 +1,84 @@
+{
+  "run_id": "214e85b2",
+  "model": "gemini",
+  "format": "tiered",
+  "task_id": "24_attribute_hunt",
+  "trial": 0,
+  "ts_unix": 1786339594,
+  "result": {
+    "answer": "I could not find any traces for the `driver` service with errors in the last 24 hours.",
+    "input_tokens": 18803,
+    "output_tokens": 65,
+    "cache_read_tokens": 13870,
+    "cache_creation_tokens": null,
+    "tool_calls": 2,
+    "duration_ms": 31598,
+    "raw_output": {
+      "response": "I could not find any traces for the `driver` service with errors in the last 24 hours.",
+      "stats": {
+        "models": {
+          "gemini-2.5-pro": {
+            "api": {
+              "totalRequests": 3,
+              "totalErrors": 0,
+              "totalLatencyMs": 17065
+            },
+            "tokens": {
+              "prompt": 18803,
+              "candidates": 65,
+              "total": 19730,
+              "cached": 13870,
+              "thoughts": 862,
+              "tool": 0
+            }
+          }
+        },
+        "tools": {
+          "totalCalls": 2,
+          "totalSuccess": 1,
+          "totalFail": 1,
+          "totalDurationMs": 23,
+          "totalDecisions": {
+            "accept": 0,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 1
+          },
+          "byName": {
+            "jaeger_search_traces": {
+              "count": 1,
+              "success": 0,
+              "fail": 1,
+              "durationMs": 0,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 0
+              }
+            },
+            "search_traces": {
+              "count": 1,
+              "success": 1,
+              "fail": 0,
+              "durationMs": 23,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 1
+              }
+            }
+          }
+        },
+        "files": {
+          "totalLinesAdded": 0,
+          "totalLinesRemoved": 0
+        }
+      }
+    },
+    "success": true,
+    "error": null,
+    "budget_exhausted": false
+  }
+}

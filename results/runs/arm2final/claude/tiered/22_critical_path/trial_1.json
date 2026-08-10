@@ -1,0 +1,85 @@
+{
+  "run_id": "c429fafa",
+  "model": "claude",
+  "format": "tiered",
+  "task_id": "22_critical_path",
+  "trial": 1,
+  "ts_unix": 1786342050,
+  "result": {
+    "answer": "## Answer\n\n**Slowest frontend trace (last 24h):** `2e5db112e04639a1e71394d5557c5cb8` \u2014 total duration **797,434 \u00b5s (~797 ms)**, started 2026-08-09T19:30:24Z (root: `frontend /dispatch`).\n\n**Operation with the highest self time:** **`mysql` \u2014 `SQL SELECT`**\n\nThis single span accounts for **360,512 \u00b5s (~360.5 ms)** of self time \u2014 about **45%** of the entire trace's duration \u2014 dwarfing every other contributor on the critical path (the next largest being `route /route` calls at 53\u201380 ms each, and aggregate Redis `GetDriver` lookups at roughly 200 ms combined). The MySQL query sits under the `customer /customer` span and is effectively the single biggest bottleneck in this trace.",
+    "input_tokens": 16,
+    "output_tokens": 3710,
+    "cache_read_tokens": 284926,
+    "cache_creation_tokens": 9325,
+    "tool_calls": 3,
+    "duration_ms": 51286,
+    "raw_output": {
+      "is_error": false,
+      "duration_api_ms": 48160,
+      "num_turns": 8,
+      "stop_reason": "end_turn",
+      "session_id": "cb28a03b-e2f6-4daf-b794-c9c2d70c4a1f",
+      "total_cost_usd": 0.1971258,
+      "usage": {
+        "input_tokens": 16,
+        "cache_creation_input_tokens": 9325,
+        "cache_read_input_tokens": 284926,
+        "output_tokens": 3710,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 9325,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 2058,
+            "cache_read_input_tokens": 38327,
+            "cache_creation_input_tokens": 4093,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 4093
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      },
+      "modelUsage": {
+        "claude-sonnet-5": {
+          "inputTokens": 16,
+          "outputTokens": 3710,
+          "cacheReadInputTokens": 284926,
+          "cacheCreationInputTokens": 9325,
+          "webSearchRequests": 0,
+          "costUSD": 0.1971258,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 64000,
+          "canonicalModel": "claude-sonnet-5",
+          "provider": "firstParty"
+        }
+      },
+      "permission_denials": [],
+      "terminal_reason": "completed",
+      "fast_mode_state": "off",
+      "fast_mode_disabled_reason": "sdk_opt_in_required",
+      "subtype": "success",
+      "api_error_status": null,
+      "result": "## Answer\n\n**Slowest frontend trace (last 24h):** `2e5db112e04639a1e71394d5557c5cb8` \u2014 total duration **797,434 \u00b5s (~797 ms)**, started 2026-08-09T19:30:24Z (root: `frontend /dispatch`).\n\n**Operation with the highest self time:** **`mysql` \u2014 `SQL SELECT`**\n\nThis single span accounts for **360,512 \u00b5s (~360.5 ms)** of self time \u2014 about **45%** of the entire trace's duration \u2014 dwarfing every other contributor on the critical path (the next largest being `route /route` calls at 53\u201380 ms each, and aggregate Redis `GetDriver` lookups at roughly 200 ms combined). The MySQL query sits under the `customer /customer` span and is effectively the single biggest bottleneck in this trace.",
+      "ttft_ms": 2202,
+      "ttft_stream_ms": 1641,
+      "time_to_request_ms": 174,
+      "type": "result",
+      "duration_ms": 48533,
+      "uuid": "0895a796-a497-4b2e-9c43-a38925ecd69a"
+    },
+    "success": true,
+    "error": null,
+    "budget_exhausted": false
+  }
+}

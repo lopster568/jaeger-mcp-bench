@@ -1,0 +1,84 @@
+{
+  "run_id": "214e85b2",
+  "model": "gemini",
+  "format": "tiered",
+  "task_id": "24_attribute_hunt",
+  "trial": 2,
+  "ts_unix": 1786340910,
+  "result": {
+    "answer": "T744353C\n",
+    "input_tokens": 28170,
+    "output_tokens": 225,
+    "cache_read_tokens": 21966,
+    "cache_creation_tokens": null,
+    "tool_calls": 3,
+    "duration_ms": 46019,
+    "raw_output": {
+      "response": "T744353C\n",
+      "stats": {
+        "models": {
+          "gemini-2.5-pro": {
+            "api": {
+              "totalRequests": 4,
+              "totalErrors": 0,
+              "totalLatencyMs": 29058
+            },
+            "tokens": {
+              "prompt": 28170,
+              "candidates": 225,
+              "total": 30367,
+              "cached": 21966,
+              "thoughts": 1972,
+              "tool": 0
+            }
+          }
+        },
+        "tools": {
+          "totalCalls": 3,
+          "totalSuccess": 3,
+          "totalFail": 0,
+          "totalDurationMs": 74,
+          "totalDecisions": {
+            "accept": 0,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 3
+          },
+          "byName": {
+            "search_traces": {
+              "count": 2,
+              "success": 2,
+              "fail": 0,
+              "durationMs": 57,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 2
+              }
+            },
+            "get_trace_errors": {
+              "count": 1,
+              "success": 1,
+              "fail": 0,
+              "durationMs": 17,
+              "decisions": {
+                "accept": 0,
+                "reject": 0,
+                "modify": 0,
+                "auto_accept": 1
+              }
+            }
+          }
+        },
+        "files": {
+          "totalLinesAdded": 0,
+          "totalLinesRemoved": 0
+        }
+      }
+    },
+    "success": true,
+    "error": null,
+    "budget_exhausted": false
+  }
+}
