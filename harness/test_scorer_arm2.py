@@ -306,10 +306,10 @@ class Task25DependencyTest(unittest.TestCase):
         self.assertEqual(verdict, scorer.VERDICT_NON_ANSWER)
 
     def test_hedged_answer_naming_an_extra_service_is_incorrect(self):
-        """FIX 5: strict bare-list. The task prompt demands 'exactly the
-        direct callers, no others', so hedging by also naming frontend (not
-        an expected caller) now fails even though the true caller (customer)
-        is also present."""
+        """FIX 5: strict list. The task prompt demands 'exactly the direct
+        callers, no others', so hedging by also asserting frontend (not an
+        expected caller, no negation context) fails even though the true
+        caller (customer) is also present."""
         g = gt("25_dependency", self.expected)
         verdict, expl = scorer.score(
             "25_dependency",
@@ -317,6 +317,41 @@ class Task25DependencyTest(unittest.TestCase):
             g,
         )
         self.assertEqual(verdict, scorer.VERDICT_INCORRECT, expl)
+
+    def test_both_hedge_from_smoke_run_is_incorrect(self):
+        """The reviewer's original hedge example: positive assertion of a
+        non-caller with no negation cue anywhere near it."""
+        g = gt("25_dependency", self.expected)
+        verdict, expl = scorer.score(
+            "25_dependency",
+            "Both frontend and customer call mysql directly, via SQL SELECT.",
+            g,
+        )
+        self.assertEqual(verdict, scorer.VERDICT_INCORRECT, expl)
+
+    def test_negated_mentions_are_not_extras_regression_d78bb27b(self):
+        """Regression from run d78bb27b: exemplary answers that name
+        non-callers only to EXCLUDE them were scored incorrect by the
+        any-mention rule. All three real answers below must score correct."""
+        g = gt("25_dependency", self.expected)
+        real_answers = [
+            # claude/tiered trial_0
+            "**Direct caller of `mysql`:** `customer` - and it is the *only* "
+            "direct caller. Confirmed two ways: the only edge into `mysql` is "
+            "`customer -> mysql` (52 calls). `driver` calls `redis-manual`, "
+            "not mysql. Operation on the mysql span: `SQL SELECT`.",
+            # claude/flat trial_0
+            "**Direct caller of mysql:** `customer` - and only `customer`. No "
+            "other hotrod service (`frontend`, `route`, `driver`) calls mysql "
+            "directly. Operation name: SQL SELECT.",
+            # claude/flat trial_2 - includes 'route' as a verb
+            "**Direct caller of mysql:** `customer` (no other hotrod service "
+            "- frontend, driver, route - calls mysql directly; they route "
+            "through customer). **Operation name on mysql spans:** `SQL SELECT`",
+        ]
+        for ans in real_answers:
+            verdict, expl = scorer.score("25_dependency", ans, g)
+            self.assertEqual(verdict, scorer.VERDICT_CORRECT, f"{expl}\n{ans[:80]}")
 
     def test_exact_bare_list_is_correct(self):
         g = gt("25_dependency", self.expected)

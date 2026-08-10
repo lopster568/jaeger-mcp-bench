@@ -502,26 +502,55 @@ _HOTROD_SERVICE_NAMES = ["frontend", "customer", "driver", "route", "mysql", "re
 _TASK_25_TARGET_SERVICE = "mysql"
 
 
-def _score_25_dependency(ans: str, expected: dict, _gt) -> tuple[str, str]:
-    """Direct callers of the target service - a STRICT bare list.
+# Negation/exclusion cues for _score_25's extras rule. A service name whose
+# every occurrence sits near one of these is being EXCLUDED by the answer
+# ("no other service - frontend, driver, route - calls mysql directly"),
+# not asserted as a caller. Window sizes are generous because the cue often
+# heads a long parenthetical listing several names.
+_NEGATION_CUES = (
+    "not", "no ", "none", "only", "other than", "except", "excluding",
+    "exclude", "rather than", "instead of", "never", "n't",
+)
+_NEG_WINDOW_BEFORE = 100
+_NEG_WINDOW_AFTER = 60
 
-    The task YAML prompt demands "exactly the direct callers, no others", so
-    correct requires all three:
-      (a) every expected caller is named (as before), AND
-      (b) no other hotrod service (i.e. anything in _HOTROD_SERVICE_NAMES
-          that isn't an expected caller or the query target itself) is named
-          ANYWHERE in the answer - over-listing (hedging by naming every
-          candidate service) now fails, where it previously passed as long
-          as the true callers happened to be included, AND
-      (c) the target_operation check, unchanged: the observed operation name
-          is real, resolver-derived context but stays secondary color, not
-          gating correctness - same 'primary signal wins' precedent as arm
-          1's spike/correlation scorers (_score_02/_score_04).
-    Negated mentions ("frontend does not call mysql") still count as
-    "named" and still fail (b) - the prompt demands a bare list, not a
-    list-with-caveats, so a hedge that names every candidate and narrows in
-    prose afterward does not satisfy "exactly the direct callers, no
-    others" either. Accepted as fair given how explicit the prompt is.
+
+def _asserted_occurrence_exists(ans: str, service: str) -> bool:
+    """True if at least one occurrence of `service` is NOT inside a
+    negation/exclusion context window. Searches the same name forms
+    _mentions_service accepts (canonical plus the bare-"redis" alias for
+    redis-manual), so an aliased mention can't dodge the extras rule."""
+    low = ans.lower()
+    forms = [service.lower()]
+    if service == "redis-manual":
+        forms.append("redis")
+    for form in forms:
+        for m in re.finditer(r"\b" + re.escape(form) + r"\b", low):
+            window = low[max(0, m.start() - _NEG_WINDOW_BEFORE):m.end() + _NEG_WINDOW_AFTER]
+            if not any(cue in window for cue in _NEGATION_CUES):
+                return True
+    return False
+
+
+def _score_25_dependency(ans: str, expected: dict, _gt) -> tuple[str, str]:
+    """Direct callers of the target service - a strict list with a
+    negation-aware extras rule.
+
+    Correct requires:
+      (a) every expected caller is named, AND
+      (b) no other hotrod service is ASSERTED as a caller. A service name
+          counts as asserted only if at least one of its occurrences sits
+          outside a negation/exclusion context (_asserted_occurrence_exists).
+          Run d78bb27b showed why any-mention strictness was wrong: the most
+          exemplary answers name the non-callers precisely to exclude them
+          ("customer - and only customer; no other service - frontend,
+          driver, route - calls mysql directly") and were scored incorrect,
+          and "route" the service name collides with "route" the verb
+          ("they route through customer"). A true hedge ("Both frontend and
+          customer call mysql") carries no negation cue and still fails.
+      (c) target_operation stays secondary color, not gating correctness -
+          same 'primary signal wins' precedent as arm 1's
+          _score_02/_score_04.
     """
     if is_non_answer(ans):
         return (VERDICT_NON_ANSWER, "agent declined to answer")
@@ -532,15 +561,20 @@ def _score_25_dependency(ans: str, expected: dict, _gt) -> tuple[str, str]:
     if not mentioned:
         return (VERDICT_NON_ANSWER, "no hotrod service name found in answer")
     missing = [c for c in expected_callers if c not in mentioned]
-    extras = [s for s in mentioned if s not in expected_callers and s != _TASK_25_TARGET_SERVICE]
+    extras = [
+        s for s in mentioned
+        if s not in expected_callers and s != _TASK_25_TARGET_SERVICE
+        and _asserted_occurrence_exists(ans, s)
+    ]
     if not missing and not extras:
         return (
             VERDICT_CORRECT,
-            f"exactly the expected callers {expected_callers} mentioned (answer named: {mentioned})",
+            f"expected callers {expected_callers} named, no non-caller asserted"
+            f" (answer named: {mentioned})",
         )
     return (
         VERDICT_INCORRECT,
-        f"missing callers {missing}; extra services named {extras};"
+        f"missing callers {missing}; asserted non-callers {extras};"
         f" answer named: {mentioned} (expected {expected_callers})",
     )
 

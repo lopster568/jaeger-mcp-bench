@@ -41,6 +41,45 @@ def _fake_mcp_config_path() -> Path:
     return Path(path)
 
 
+class ClaudeInfraErrorTests(unittest.TestCase):
+    """Regression for run d78bb27b: the CLI reports transport failures as a
+    NORMAL success envelope whose result text starts with "API Error:", exit
+    code 0 - 18/36 trials were scored against ground truth that way."""
+
+    _outage_payload = json.dumps({
+        "type": "result", "subtype": "success",
+        "result": "API Error: Unable to connect to API (ENOTIMP)",
+        "num_turns": 1, "usage": {"input_tokens": 0, "output_tokens": 0},
+    })
+
+    def test_api_error_answer_classified_and_retried(self):
+        ok_payload = json.dumps({
+            "type": "result", "subtype": "success",
+            "result": "real answer", "num_turns": 3,
+            "usage": {"input_tokens": 10, "output_tokens": 5},
+        })
+        calls = [
+            _completed(0, self._outage_payload),
+            _completed(0, ok_payload),
+        ]
+        with mock.patch("subprocess.run", side_effect=calls), \
+             mock.patch("time.sleep") as slept:
+            r = claude_runner.run(prompt="x", mcp_config_path=Path("/fake.json"))
+        self.assertTrue(r.success)
+        self.assertEqual(r.answer, "real answer")
+        slept.assert_called()  # retried after a backoff, not immediately
+
+    def test_persistent_outage_returns_infra_error_with_empty_answer(self):
+        calls = [_completed(0, self._outage_payload)] * (1 + claude_runner._INFRA_RETRIES)
+        with mock.patch("subprocess.run", side_effect=calls), \
+             mock.patch("time.sleep"):
+            r = claude_runner.run(prompt="x", mcp_config_path=Path("/fake.json"))
+        self.assertFalse(r.success)
+        self.assertEqual(r.error, claude_runner.INFRA_ERROR)
+        self.assertEqual(r.answer, "")  # no scorer must ever see the error text
+        self.assertIn("API Error", r.raw_output.get("result", ""))
+
+
 class ClaudeBudgetExhaustedTests(unittest.TestCase):
     def test_normal_success_not_flagged(self):
         payload = {

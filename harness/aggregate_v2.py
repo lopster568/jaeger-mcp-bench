@@ -78,6 +78,26 @@ def aggregate(run_dir: Path, ground_truth: dict) -> list[dict]:
         for t in trials:
             r = t.get("result") or {}
             ans = r.get("answer", "") or ""
+            if str(r.get("error") or "") == "api_connection_error":
+                # Transport failure (claude_runner.INFRA_ERROR): the model
+                # never got to attempt the task, so this is neither an
+                # outcome nor an answer. Counted in n_infra_error, excluded
+                # from verdicts and every denominator. With retries in the
+                # runner these should be rare.
+                scored_per_trial.append({
+                    "verdict": "infra_error",
+                    "explanation": "api_connection_error",
+                    "answer": "",
+                    "input_tokens": r.get("input_tokens") or 0,
+                    "output_tokens": r.get("output_tokens") or 0,
+                    "cache_creation_tokens": r.get("cache_creation_tokens") or 0,
+                    "cache_read_tokens": r.get("cache_read_tokens") or 0,
+                    "tool_calls": r.get("tool_calls") or 0,
+                    "duration_ms": r.get("duration_ms") or 0,
+                    "budget_exhausted": False,
+                    "is_timeout": False,
+                })
+                continue
             if not ans:
                 # Arm-1 semantics preserved: empty answer text is always
                 # incorrect, UNLESS ground truth itself is unscorable
@@ -116,10 +136,13 @@ def aggregate(run_dir: Path, ground_truth: dict) -> list[dict]:
         budget_exhausted = sum(1 for s in scored_per_trial if s["budget_exhausted"])
         timeout = sum(1 for s in scored_per_trial if s["is_timeout"])
 
-        # Unscorable trials are excluded from the pass-rate denominator -
-        # there was no ground truth to pass or fail against - but n_trials
-        # itself stays the raw trial count (arm-1 semantics unchanged).
-        scorable_n = n - unscorable
+        infra_error = sum(1 for s in scored_per_trial if s["verdict"] == "infra_error")
+
+        # Unscorable and infra-error trials are excluded from the pass-rate
+        # denominator - no ground truth to fail against / no model attempt
+        # at all - but n_trials itself stays the raw trial count (arm-1
+        # semantics unchanged).
+        scorable_n = n - unscorable - infra_error
 
         sample_correct = next((s["answer"][:200] for s in scored_per_trial if s["verdict"] == scorer.VERDICT_CORRECT), "")
         sample_incorrect = next((f"{s['explanation']} :: {s['answer'][:120]}" for s in scored_per_trial if s["verdict"] != scorer.VERDICT_CORRECT), "")
@@ -145,6 +168,7 @@ def aggregate(run_dir: Path, ground_truth: dict) -> list[dict]:
             "n_unscorable": unscorable,
             "n_budget_exhausted": budget_exhausted,
             "n_timeout": timeout,
+            "n_infra_error": infra_error,
         })
     return rows
 

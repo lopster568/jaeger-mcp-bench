@@ -67,7 +67,42 @@ class TrialResult:
     budget_exhausted: bool = False
 
 
+# The CLI reports transport-level failures (DNS/connect errors) as a normal
+# result envelope whose answer text starts with this marker, exit code 0.
+# Run d78bb27b lost 18/36 trials to a network blip that way - every one
+# recorded as a clean trial and scored against ground truth. Detect, retry,
+# and if the retries also fail, classify as an infra error so aggregation
+# can exclude the trial instead of scoring garbage.
+API_ERROR_MARKER = "API Error:"
+INFRA_ERROR = "api_connection_error"
+_INFRA_RETRIES = 2
+_INFRA_RETRY_WAIT_SEC = 30
+
+
 def run(
+    *,
+    prompt: str,
+    mcp_config_path: Path,
+    model: str = "sonnet",
+    timeout_sec: int = 180,
+    max_budget_usd: float = 0.50,
+) -> TrialResult:
+    result = _run_once(
+        prompt=prompt, mcp_config_path=mcp_config_path, model=model,
+        timeout_sec=timeout_sec, max_budget_usd=max_budget_usd,
+    )
+    for _ in range(_INFRA_RETRIES):
+        if result.error != INFRA_ERROR:
+            return result
+        time.sleep(_INFRA_RETRY_WAIT_SEC)
+        result = _run_once(
+            prompt=prompt, mcp_config_path=mcp_config_path, model=model,
+            timeout_sec=timeout_sec, max_budget_usd=max_budget_usd,
+        )
+    return result
+
+
+def _run_once(
     *,
     prompt: str,
     mcp_config_path: Path,
@@ -142,8 +177,26 @@ def run(
         # 1 tool call ≈ 2 extra turns. Approximation: max(0, (num_turns - 1) // 2).
         num_turns = data.get("num_turns", 1) or 1
         tool_calls_approx = max(0, (num_turns - 1) // 2)
+        answer = data.get("result", "") or ""
+        if answer.startswith(API_ERROR_MARKER):
+            # Transport failure dressed as an answer (see API_ERROR_MARKER
+            # note above). Keep the text in raw_output for diagnosis; the
+            # answer field stays empty so no scorer ever sees it.
+            return TrialResult(
+                answer="",
+                input_tokens=usage.get("input_tokens"),
+                output_tokens=usage.get("output_tokens"),
+                cache_read_tokens=usage.get("cache_read_input_tokens"),
+                cache_creation_tokens=usage.get("cache_creation_input_tokens"),
+                tool_calls=tool_calls_approx,
+                duration_ms=elapsed_ms,
+                raw_output=data,
+                success=False,
+                error=INFRA_ERROR,
+                budget_exhausted=False,
+            )
         return TrialResult(
-            answer=data.get("result", "") or "",
+            answer=answer,
             input_tokens=usage.get("input_tokens"),
             output_tokens=usage.get("output_tokens"),
             cache_read_tokens=usage.get("cache_read_input_tokens"),

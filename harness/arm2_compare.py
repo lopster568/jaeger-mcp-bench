@@ -120,6 +120,12 @@ def aggregate_run(run_dir: Path, ground_truth: dict) -> list[dict]:
         scored = []
         for t in trials:
             r = t.get("result") or {}
+            # Transport failures (claude_runner.INFRA_ERROR) are neither
+            # outcomes nor answers - mirror aggregate_v2.py and exclude them
+            # from verdicts and every proportion.
+            if str(r.get("error") or "") == "api_connection_error":
+                scored.append({"verdict": "infra_error", **normalize_tokens(model, t)})
+                continue
             ans = r.get("answer", "") or ""
             verdict = _score_verdict(tid, ans, ground_truth)
             tk = normalize_tokens(model, t)
@@ -129,7 +135,7 @@ def aggregate_run(run_dir: Path, ground_truth: dict) -> list[dict]:
         if n == 0:
             continue
         unscorable = sum(1 for s in scored if s["verdict"] == scorer.VERDICT_UNSCORABLE)
-        scorable = [s for s in scored if s["verdict"] != scorer.VERDICT_UNSCORABLE]
+        scorable = [s for s in scored if s["verdict"] not in (scorer.VERDICT_UNSCORABLE, "infra_error")]
         scorable_n = len(scorable)
         correct = sum(1 for s in scorable if s["verdict"] == scorer.VERDICT_CORRECT)
 
